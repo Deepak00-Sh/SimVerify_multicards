@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="850.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mannash.simcardvalidation.TestingController">
+    <top>
+        <HBox style="-fx-background-color: #D3D3D3;" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+            <children>
+                <ImageView fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/airtelair2.png" />
+                    </image>
+                    <HBox.margin>
+                        <Insets bottom="6.0" left="7.0" top="11.0" />
+                    </HBox.margin>
+                </ImageView>
+                <Region HBox.hgrow="ALWAYS" />
+                <Region prefHeight="55.0" prefWidth="277.0" HBox.hgrow="ALWAYS" />
+                <HBox alignment="TOP_RIGHT" style="-fx-alignment: right; ">
+                    <ImageView fitHeight="38.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                        <image>
+                            <Image url="@images/user.png" />
+                        </image>
+                        <viewport>
+                            <Rectangle2D />
+                        </viewport>
+                        <HBox.margin>
+                            <Insets bottom="5.0" left="6.0" top="12.0" />
+                        </HBox.margin>
+                    </ImageView>
+               <ComboBox prefWidth="100.0" promptText="Store_user" visibleRowCount="1">
+                  <HBox.margin>
+                     <Insets left="4.0" top="18.0" />
+                  </HBox.margin>
+               </ComboBox>
+                    <HBox.margin>
+                        <Insets right="15.0" />
+                    </HBox.margin>
+
+
+                </HBox>
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.2" orientation="VERTICAL" style="-fx-background-color: white;">
+            <VBox prefHeight="129.0" prefWidth="669.0">
+                <AnchorPane style="-fx-background-color: white;">
+                    <children>
+                        <Label layoutX="88.0" layoutY="17.0" text="Card ICCID">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font></Label>
+                        <TextField id="input_iccid" fx:id="input_iccid" layoutX="201.0" layoutY="14.0" prefHeight="31.0" prefWidth="252.0" promptText="Card ICCID" />
+                        <Separator layoutX="79.0" layoutY="93.0" prefHeight="3.0" prefWidth="374.0" />
+                        <TextField id="input_imsi" fx:id="input_imsi" layoutX="201.0" layoutY="49.0" prefHeight="31.0" prefWidth="252.0" promptText="Card IMSI">
+                        </TextField>
+                        <Label layoutX="88.0" layoutY="52.0" text="Card IMSI">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font></Label>
+                  <Label id="status_label" fx:id="status_label" layoutX="528.0" layoutY="29.0" prefHeight="54.0" prefWidth="250.0" textFill="#0cb748">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                    </children>
+                </AnchorPane>
+            </VBox>
+            <VBox>
+                <AnchorPane id="mainAnchorPane" fx:id="mainAnchorPane" prefHeight="325.0" prefWidth="811.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+                    <children>
+                        <VBox alignment="BOTTOM_LEFT" layoutX="85.0" layoutY="36.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="288.0" prefWidth="387.0" spacing="10" style="-fx-alignment: center;" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="36.0">
+                            <children>
+                                <HBox spacing="260">
+                                    <children>
+                                        <Label prefHeight="17.0" prefWidth="91.0" text="SIM Heartbeat">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Label>
+                                        <ImageView id="img_test_status_1" fx:id="img_test_status_1" fitHeight="17.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/greycircle.png" />
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </HBox>
+                                <Separator prefWidth="150" />
+
+                                <HBox spacing="219">
+                                    <children>
+                                        <Label text="File System Verification">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Label>
+
+                                        <ImageView id="img_test_status_2" fx:id="img_test_status_2" fitHeight="17.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@images/greycircle.png" />
+                                            </image>
+                                        </ImageView>
+
+                                    </children>
+
+                                </HBox>
+                                <Separator prefWidth="200" />
+                                <HBox spacing="245">
+                                    <Label text="Profile Verification">
+                                        <font>
+                                            <Font name="System Bold" size="12.0" />
+                                        </font>
+                                    </Label>
+
+                                    <ImageView id="img_test_status_3" fx:id="img_test_status_3" fitHeight="17.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@images/greycircle.png" />
+                                        </image>
+                                    </ImageView>
+                                </HBox>
+                                <Separator prefWidth="200" />
+
+
+                                <HBox spacing="260">
+                                    <Label text="Read/Write Test">
+                                        <font>
+                                            <Font name="System Bold" size="12.0" />
+                                        </font>
+                                    </Label>
+                                    <ImageView id="img_test_status_4" fx:id="img_test_status_4" fitHeight="17.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@images/greycircle.png" />
+                                        </image>
+                                    </ImageView>
+                                </HBox>
+                                <Separator prefWidth="200" />
+
+                                <HBox spacing="218">
+                                    <Label text="Test Result Compilation">
+                                        <font>
+                                            <Font name="System Bold" size="12.0" />
+                                        </font>
+                                    </Label>
+                                    <ImageView id="img_test_status_5" fx:id="img_test_status_5" fitHeight="17.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                        <image>
+                                            <Image url="@images/greycircle.png" />
+                                        </image>
+                                    </ImageView>
+                                </HBox>
+                            </children>
+                            <HBox alignment="CENTER">
+                                <ImageView id="img_test_button" fx:id="img_test_button" fitHeight="65.0" fitWidth="144.0" layoutX="200.0" layoutY="209.0" onMouseClicked="#changeImage" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="356.0" AnchorPane.topAnchor="209.0">
+                                    <image>
+                                        <Image url="@images/startTest.gif" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets top="17.0" />
+                                    </HBox.margin></ImageView>
+                            </HBox>
+                        </VBox>
+
+            <VBox id="simCardVbox" fx:id="simCardVbox" alignment="CENTER" layoutX="511.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="299.0" prefWidth="316.0" style="-fx-background-color: white;">
+                     <children>
+                    <ImageView id="img_status" fx:id="img_status" fitHeight="296.0" fitWidth="198.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@images/simcard.jpg" />
+                        </image>
+                           <effect>
+                              <Glow />
+                           </effect>
+                    </ImageView>
+                     </children>
+            </VBox>
+                    </children>
+                </AnchorPane>
+            </VBox>
+        </SplitPane>
+    </center>
+
+
+
+</BorderPane>

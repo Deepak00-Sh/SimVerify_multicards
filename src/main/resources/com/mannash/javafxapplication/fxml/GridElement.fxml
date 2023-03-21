@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane id="rootPane" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="207.0" style="-fx-background-radius: 15; -fx-background-color: #2F58CD;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mannash.simcardvalidation.SimVerifyMasterThread">
+   <children>
+      <VBox id="" prefHeight="144.0" prefWidth="277.0">
+         <children>
+            <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="26.0" prefWidth="265.0">
+               <children>
+                  <Label id="iccid_label" maxHeight="-Infinity" maxWidth="-Infinity" text="ICCID : " textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets top="7.0" />
+                     </HBox.margin></Label>
+                  <Label id="iccid_value_label" fx:id="iccid_value_label" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="146.0" text="--" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="4.0" top="7.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="7.0" prefWidth="207.0">
+               <children>
+                  <Label id="iccid_label" fx:id="iccid_label" maxHeight="-Infinity" maxWidth="-Infinity" text="IMSI   : " textFill="#fffcfc">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets top="7.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label id="imsi_value_label" fx:id="imsi_value_label" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="146.0" text="--" textFill="WHITE">
+                     <HBox.margin>
+                        <Insets left="4.0" top="7.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets top="-4.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="84.0" prefWidth="277.0">
+               <children>
+                  <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="140.0">
+                     <children>
+                        <HBox prefHeight="13.0" prefWidth="140.0">
+                           <children>
+                              <Label text="SLOT  :" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label id="widgetSlot" fx:id="widgetSlot" prefHeight="17.0" prefWidth="60.0" textFill="WHITE">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets top="-9.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="23.0" prefWidth="99.0">
+                           <children>
+                              <Label maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="20.0" prefWidth="60.0" text="STATUS :" textFill="WHITE">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label id="status_label" fx:id="" prefHeight="17.0" prefWidth="80.0" textFill="WHITE">
+                                 <HBox.margin>
+                                    <Insets left="5.0" top="1.0" />
+                                 </HBox.margin></Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="61.0" prefWidth="19.0">
+                     <children>
+                        <ImageView id="status_image" fx:id="status_image" fitHeight="46.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/question-mark.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="-2.0" />
+                           </VBox.margin></ImageView>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

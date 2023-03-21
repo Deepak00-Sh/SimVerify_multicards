@@ -1,0 +1,9 @@
+#parentStackPane{
+-fx-background-color:red;
+}
+.text-area{
+-fx-background-color: #e3f1fe ;
+-fx-background-insets: 0, 0 0 1 0 ;
+-fx-background-radius: 0 ;
+
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="loginFormAnchorPane" prefHeight="650.0" prefWidth="980.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mannash.simcardvalidation.SimVerifyMasterThread2">
+    <children>
+        <Pane layoutX="296.0" layoutY="14.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="296.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+            <children>
+                <ImageView fitHeight="650.0" fitWidth="980.0" layoutX="-296.0" layoutY="13.0" opacity="0.99" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@images/airtelStore2.jpg" />
+                    </image>
+                </ImageView>
+                <TextField id="user_input" onKeyPressed="#handleKeyForUserInput" fx:id="user_input" layoutX="310.0" layoutY="401.0" prefHeight="25.0" prefWidth="182.0" promptText="user@example.com" />
+                <Button fx:id="loginButton"  onKeyPressed="#handleKeyForLoginButton" layoutX="310.0" layoutY="479.0" lineSpacing="3.0" mnemonicParsing="false" onAction="#onLoginButtonPress" prefHeight="25.0" prefWidth="182.0" style="-fx-background-color: #FF0000;" text="Log In" textAlignment="JUSTIFY" textFill="#fbf8f8">
+                    <font>
+                        <Font name="Roboto Light" size="12.0" />
+                    </font>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                    <effect>
+                        <InnerShadow />
+                    </effect>
+                </Button>
+                <PasswordField id="password_input" onKeyPressed="#handleKeyForPassword" fx:id="password_input" layoutX="310.0" layoutY="438.0" prefHeight="25.0" prefWidth="182.0" promptText="password" />
+            <Label id="promptLabel" fx:id="promptLabel" layoutX="310.0" layoutY="375.0" prefHeight="17.0" prefWidth="182.0" />
+            </children>
+            <effect>
+                <InnerShadow choke="0.01" height="23.36" radius="5.34" width="0.0" />
+            </effect></Pane>
+
+
+    </children>
+    <effect>
+        <DropShadow />
+    </effect>
+</AnchorPane>
