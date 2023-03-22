@@ -82,6 +82,8 @@ public class SimVerifyMasterThread2 {
 
     @FXML
     private ImageView exportIcon;
+
+
     //runtime elements
     ScrollPane pane;
     //Image Views
@@ -132,7 +134,7 @@ public class SimVerifyMasterThread2 {
     ExportTestingResultPojo exportTestingResultPojo = new ExportTestingResultPojo();
     private Object csvLock = new Object();
 
-    int numberOfAvailableCards =0;
+
 
     @FXML
     public void onLoginButtonPress() throws IOException {
@@ -261,6 +263,7 @@ public class SimVerifyMasterThread2 {
             int id = i;
             reLoadCardWidget(id);
         }
+
         exportMessage.setVisible(false);
         exportIcon.setVisible(false);
         setStartButton();
@@ -269,6 +272,7 @@ public class SimVerifyMasterThread2 {
 
     public void onStartButtonPress() {
         if (startTestingButton.getImage().getUrl().contains("button_Start_Testing.png")) {
+            cardTestingResultMap.clear();
             TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);
             int numberOfTerminal = terminalConnectService.fetchTerminalCount();
 
@@ -350,9 +354,9 @@ public class SimVerifyMasterThread2 {
                     ImageView statusImage = (ImageView) cardWidget[index].lookup("#status_image");
                     iccidValue.setText(iccid);
                     imsiValue.setText(imsi);
-//                    cardsConnectedList.getItems().add(index, iccidValue.getText());
+                    this.cardsConnectedList.getItems().add(index, iccid);
                     System.out.println("Task1 runLater : " + index);
-//                            statusImage.setImage(processingImage);
+//                  statusImage.setImage(processingImage);
                     statusLabel.setText("Waiting for card");
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -360,8 +364,6 @@ public class SimVerifyMasterThread2 {
             });
         }
     }
-
-
     public void updateWidgetStatusLabel(String status, int index) {
         Node node = mainGridPane.getChildren().get(index);
         if (node instanceof StackPane) {
@@ -420,7 +422,6 @@ public class SimVerifyMasterThread2 {
             pause.play();
         }
     }
-
     public void updateWidgetIccidAndImsi(String iccid, String imsi, int index) {
         Node node = mainGridPane.getChildren().get(index);
         if (node instanceof StackPane) {
@@ -430,19 +431,19 @@ public class SimVerifyMasterThread2 {
             Label iccidValue = (Label) cardWidget.lookup("#iccid_value_label");
             Label imsiValue = (Label) cardWidget.lookup("#imsi_value_label");
             Label widgetSlot = (Label) cardWidget.lookup("#widgetSlot");
-            if (iccid == null) {
-                Platform.runLater(() -> {
-                    this.cardsConnectedList.getItems().add(index,"--");
-                    widgetSlot.setText("" + (index + 1));
-                    widgetSlot.setStyle("");
-                });
-                return;
-            }
+//            if (iccid == null) {
+//                Platform.runLater(() -> {
+//                    this.cardsConnectedList.getItems().set(index,"-");
+//                    widgetSlot.setText("" + (index + 1));
+//                    widgetSlot.setStyle("");
+//                });
+//                return;
+//            }
             pause.setOnFinished(event -> {
                 Platform.runLater(() -> {
                     iccidValue.setText(iccid);
                     imsiValue.setText(imsi);
-                    this.cardsConnectedList.getItems().add(index,iccid);
+                    this.cardsConnectedList.getItems().set(index,iccid);
                     widgetSlot.setText("" + (index + 1));
 //                    setIndicatorToICCID(iccid, yellowIndicatorImage, index);
                 });
@@ -539,7 +540,7 @@ public class SimVerifyMasterThread2 {
                 SimVerifyMasterThread2.elementColumn++;
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -585,26 +586,24 @@ public class SimVerifyMasterThread2 {
         System.out.println("inside the run");
         TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);
         List<TerminalInfo> terminalInfos = terminalConnectService.fetchTerminalInfo();
+
+        System.out.println("TERMINAL INFOS : " + terminalInfos.toString());
         Iterator<TerminalInfo> terminalInfo = terminalInfos.iterator();
         int index = 0;
 //        this.cardsConnectedList.setItems(FXCollections.observableArrayList());
         while (terminalInfo.hasNext()) {
             System.out.println("index : " + index);
             TerminalInfo terminal = terminalInfo.next();
-            System.out.println("Terminal Number : " + (index + 1));
-            exportTestingResultPojo.setTerminalNumber((index + 1));
             String iccid = terminal.getTerminalCardIccid();
             System.out.println("ICCID : " + iccid);
             this.terminalsConnected++;
             if (iccid == null) {
-                updateWidgetIccidAndImsi(null, null, index);
+                updateWidgetIccidAndImsi("-", "-", index);
             }
             if (iccid != null) {
                 cardConnectedCounter++;
-                String imsi = terminal.getImsi();
-                System.out.println("IMSI : " + imsi);
                 int finalIndex = index;
-                updateWidgetIccidAndImsi(iccid, imsi, finalIndex);
+                updateWidgetIccidAndImsi(terminal.getTerminalCardIccid(), terminal.getImsi(), finalIndex);
                 updateWidgetStatusLabel("IN_PROGRESS", finalIndex);
                 updateWidgetStatusImage(processingImage, finalIndex);
             }
@@ -691,6 +690,7 @@ public class SimVerifyMasterThread2 {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
         String dateTimeString = currentDateTime.format(formatter);
+        String csvFileName  = "TestingResult_" + dateTimeString + ".csv";
         String fileName = csvFilePath + "TestingResult_" + dateTimeString + ".csv";
         File csvFile = new File(fileName);
 
@@ -713,9 +713,9 @@ public class SimVerifyMasterThread2 {
              CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {
             if (!this.headersPrinted) {
                 csvPrinter.printRecord(
+                        "Terminal Number",
                         "Date",
                         "Time",
-                        "Terminal Number",
                         "ICCID",
                         "IMSI",
                         "SIM Heartbeat",
@@ -731,9 +731,9 @@ public class SimVerifyMasterThread2 {
                     Integer key = result.getKey();
                     ExportTestingResultPojo value = result.getValue();
                     csvPrinter.printRecord(
+                            value.getTerminalNumber(),
                             value.getDateOfTesting(),
                             value.getTimeOfTesting(),
-                            value.getTerminalNumber(),
                             value.getTerminalICCID(),
                             value.getTerminalIMSI(),
                             value.getSIMHeartbeat(),
@@ -745,7 +745,9 @@ public class SimVerifyMasterThread2 {
                 }
                 csvPrinter.flush();
             }
+
             exportIcon.setVisible(false);
+            exportMessage.setText("Result Exported successfully to\n" +csvFileName+ " in reports folder");
             exportMessage.setVisible(true);
         } catch (Exception ex) {
             ex.printStackTrace();

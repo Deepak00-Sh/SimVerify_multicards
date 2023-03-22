@@ -27,6 +27,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -203,7 +204,7 @@ public class TestingController4 implements Initializable, Runnable {
     public AtomicBoolean stopped = new AtomicBoolean(false);
 
     String terminalICCID = null;
-    String terminalIMSI  = null;
+    String terminalIMSI = null;
 
     int terminalNumber = 0;
 
@@ -241,10 +242,8 @@ public class TestingController4 implements Initializable, Runnable {
             Thread thread = entry.getValue();
             if (thread.isAlive()) {
                 Boolean threadStatus = thread.isAlive();
-                System.out.println("Before stopping  : " + thread + " : " + threadStatus);
                 thread.stop();
                 threadStatus = thread.isAlive();
-                System.out.println("After stopping  : " + thread + " : " + threadStatus);
             }
 //            if(thread.isDaemon())
             System.out.println(Thread.currentThread().isAlive());
@@ -254,6 +253,8 @@ public class TestingController4 implements Initializable, Runnable {
     public void run() {
 
         TerminalInfo localTerminal = terminal;
+
+        System.out.println("WIDGET ID outside task : " + this.widgetId);
         task1 = new Task<Boolean>() {
             @Override
             protected Boolean call() throws Exception {
@@ -287,12 +288,18 @@ public class TestingController4 implements Initializable, Runnable {
                     loggerThread.displayLogs(_terminal, _card, "Reading ICCID", widgetId);
                     String iccid = getICCID(cardTerminal);
                     terminalICCID = iccid;
-                    terminalNumber = widgetId +1;
+                    System.out.println("WIDGET ID inside task : " + widgetId);
+                    terminalNumber = widgetId + 1;
                     loggerThread.displayLogs(_terminal, "ICCID Value " + iccid, widgetId);
                     loggerThread.displayLogs(_terminal, _card, "Reading IMSI", widgetId);
                     String imsi = getIMSI(cardTerminal);
                     terminalIMSI = imsi;
                     loggerThread.displayLogs(_terminal, "IMSI Value " + imsi, widgetId);
+
+
+
+                    //setting date and time to pojo
+
 
                     if (iccid != null && !"".equalsIgnoreCase(iccid)) {
                         localTerminal.setTerminalCardIccid(iccid);
@@ -384,6 +391,7 @@ public class TestingController4 implements Initializable, Runnable {
                 Platform.runLater(() -> {
                     if (result) {
 
+
                     } else {
 
                         simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
@@ -396,23 +404,23 @@ public class TestingController4 implements Initializable, Runnable {
 
                 });
                 if (result) {
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+                    this.testingResultPojo.setDateOfTesting(LocalDate.now().format(dateFormatter));
+                    this.testingResultPojo.setTimeOfTesting(LocalTime.now().format(timeFormatter));
                     this.testingResultPojo.setTerminalNumber(terminalNumber);
                     this.testingResultPojo.setTerminalICCID(terminalICCID);
                     this.testingResultPojo.setTerminalIMSI(terminalIMSI);
-                    this.testingResultPojo.setDateOfTesting(LocalDate.now());
-                    this.testingResultPojo.setTimeOfTesting(LocalTime.now());
                     this.testingResultPojo.setSIMHeartbeat("OK");
                     this.thread2 = new Thread(task2);
                     this.threadMap.put("t2", this.thread2);
                     this.thread2.start();
                     this.thread1.stop();
                 } else {
-                    System.out.println("Inside else of task1");
                     this.testingResultPojo.setFileSystemVerification("NOT OK");
                     this.testingResultPojo.setProfileTesting("NOT OK");
                     this.testingResultPojo.setReadWrite("NOT OK");
-                    this.testingResultPojo.setCardStatus("FAULTY!");
-                    System.out.println("TASK-I else, SIMHeartBeat : " + this.testingResultPojo.getSIMHeartbeat());
+                    this.testingResultPojo.setCardStatus("FAULTY");
                     task2.cancel();
                     task3.cancel();
                     task4.cancel();
@@ -426,9 +434,9 @@ public class TestingController4 implements Initializable, Runnable {
             task2.setOnSucceeded(event2 -> {
                 Boolean result = task2.getValue();
                 Platform.runLater(() -> {
-                if (result) {
-                    loggerThread.displayLogs(_terminal, _card, "File Verification done", widgetId);
-                } else {
+                    if (result) {
+                        loggerThread.displayLogs(_terminal, _card, "File Verification done", widgetId);
+                    } else {
 
                         simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
                         simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
@@ -436,28 +444,21 @@ public class TestingController4 implements Initializable, Runnable {
                         loggerThread.displayLogs(_terminal, "Skipping Profile Verification", widgetId);
                         loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
 
-                }
+                    }
                 });
 
                 if (result) {
                     this.testingResultPojo.setFileSystemVerification("OK");
-                    System.out.println("Inside the if of task2!!");
                     this.thread3 = new Thread(task3);
                     this.threadMap.put("t3", this.thread3);
                     this.thread3.start();
                     this.thread2.stop();
 
                 } else {
-                    System.out.println("Inside the else of task2!!!");
                     this.testingResultPojo.setFileSystemVerification("NOT OK");
                     this.testingResultPojo.setProfileTesting("NOT OK");
                     this.testingResultPojo.setReadWrite("NOT OK");
                     this.testingResultPojo.setCardStatus("FAULTY");
-                    System.out.println("TASK-II else File verification : " + this.testingResultPojo.getFileSystemVerification());
-                    System.out.println("TASK-II else profile testing : " + this.testingResultPojo.getProfileTesting());
-                    System.out.println("TASK-II else read/write : " + this.testingResultPojo.getReadWrite());
-                    System.out.println("TASK-II else card status : " + this.testingResultPojo.getCardStatus());
-
                     task3.cancel();
                     task4.cancel();
                     task5.cancel();
@@ -465,9 +466,6 @@ public class TestingController4 implements Initializable, Runnable {
                     simVerifyMasterThread2.updateTesting(widgetId);
                     return;
                 }
-
-
-
 
 
             });
@@ -488,7 +486,6 @@ public class TestingController4 implements Initializable, Runnable {
 
                 if (result) {
                     this.testingResultPojo.setProfileTesting("OK");
-                    System.out.println("Inside the if of task3!!");
                     this.thread4 = new Thread(task4);
                     this.threadMap.put("t3", this.thread4);
                     this.thread4.start();
@@ -497,13 +494,8 @@ public class TestingController4 implements Initializable, Runnable {
                     this.testingResultPojo.setProfileTesting("NOT OK");
                     this.testingResultPojo.setReadWrite("NOT OK");
                     this.testingResultPojo.setCardStatus("FAULTY");
-                    System.out.println("Inside the else of task3!!");
-                    System.out.println("TASK-III else profile testing : " + this.testingResultPojo.getProfileTesting());
-                    System.out.println("TASK-III else read/write : " + this.testingResultPojo.getReadWrite());
-                    System.out.println("TASK-III else card status : " + this.testingResultPojo.getCardStatus());
                     task4.cancel();
                     task5.cancel();
-
                     simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
                     simVerifyMasterThread2.updateTesting(widgetId);
                     return;
@@ -525,7 +517,6 @@ public class TestingController4 implements Initializable, Runnable {
 
 
                 if (result) {
-                    System.out.println("Inside the if of task4!!");
                     this.testingResultPojo.setReadWrite("OK");
                     this.thread5 = new Thread(task5);
                     this.threadMap.put("t5", this.thread5);
@@ -534,9 +525,6 @@ public class TestingController4 implements Initializable, Runnable {
                 } else {
                     this.testingResultPojo.setReadWrite("NOT OK");
                     this.testingResultPojo.setCardStatus("FAULTY");
-                    System.out.println("TASK-IV else read/write : " + this.testingResultPojo.getReadWrite());
-                    System.out.println("TASK-IV else card status : " + this.testingResultPojo.getCardStatus());
-
                     task5.cancel();
                     simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
                     simVerifyMasterThread2.updateTesting(widgetId);
@@ -548,8 +536,6 @@ public class TestingController4 implements Initializable, Runnable {
                 Boolean result = task5.getValue();
                 Platform.runLater(() -> {
                     if (result) {
-
-                        // simVerifyMasterThread2.setDoneButton();
                         simVerifyMasterThread2.updateWidgetStatusImage(true, widgetId);
                         simVerifyMasterThread2.updateWidgetStatusLabel("Ok", widgetId);
                     } else {
@@ -557,14 +543,10 @@ public class TestingController4 implements Initializable, Runnable {
                         simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
                     }
 
-                    if(result){
-                        System.out.println("Inside the if of task5!!");
+                    if (result) {
                         this.testingResultPojo.setCardStatus("OK");
-                    }
-                    else{
-                        System.out.println("Inside the else of task5!!");
+                    } else {
                         this.testingResultPojo.setCardStatus("NOT OK");
-                        System.out.println("TASK-V else card status : " + this.testingResultPojo.getCardStatus());
                         simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
 
                     }
