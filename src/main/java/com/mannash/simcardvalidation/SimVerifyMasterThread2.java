@@ -132,6 +132,8 @@ public class SimVerifyMasterThread2 {
     ExportTestingResultPojo exportTestingResultPojo = new ExportTestingResultPojo();
     private Object csvLock = new Object();
 
+    int numberOfAvailableCards =0;
+
     @FXML
     public void onLoginButtonPress() throws IOException {
       TrakmeServerCommunicationService trakmeServerCommunicationService = new TrakmeServerCommunicationServiceImpl(loggerThread);
@@ -429,17 +431,19 @@ public class SimVerifyMasterThread2 {
             Label imsiValue = (Label) cardWidget.lookup("#imsi_value_label");
             Label widgetSlot = (Label) cardWidget.lookup("#widgetSlot");
             if (iccid == null) {
-                widgetSlot.setText("" + (index + 1));
-                widgetSlot.setStyle("");
+                Platform.runLater(() -> {
+                    this.cardsConnectedList.getItems().add(index,"--");
+                    widgetSlot.setText("" + (index + 1));
+                    widgetSlot.setStyle("");
+                });
                 return;
             }
             pause.setOnFinished(event -> {
                 Platform.runLater(() -> {
                     iccidValue.setText(iccid);
                     imsiValue.setText(imsi);
-                        this.cardsConnectedList.getItems().add(iccid);
+                    this.cardsConnectedList.getItems().add(index,iccid);
                     widgetSlot.setText("" + (index + 1));
-
 //                    setIndicatorToICCID(iccid, yellowIndicatorImage, index);
                 });
             });
@@ -599,7 +603,6 @@ public class SimVerifyMasterThread2 {
                 cardConnectedCounter++;
                 String imsi = terminal.getImsi();
                 System.out.println("IMSI : " + imsi);
-
                 int finalIndex = index;
                 updateWidgetIccidAndImsi(iccid, imsi, finalIndex);
                 updateWidgetStatusLabel("IN_PROGRESS", finalIndex);
