@@ -1,6 +1,7 @@
 package com.mannash.simcardvalidation.service;
 
 import com.google.gson.Gson;
+import com.mannash.simcardvalidation.SimVerifyLoggerThread;
 import com.mannash.simcardvalidation.pojo.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,7 +38,9 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 	private final Logger logger = LoggerFactory.getLogger(TrakmeServerCommunicationServiceImpl.class);
 	public String hostIP = "";
 
-	public TrakmeServerCommunicationServiceImpl() {
+	SimVerifyLoggerThread simVerifyLoggerThread;
+	public TrakmeServerCommunicationServiceImpl(SimVerifyLoggerThread simVerifyLoggerThread) {
+		this.simVerifyLoggerThread = simVerifyLoggerThread;
 
 //		 this.loggerService = new LoggerServiceImpl();
 

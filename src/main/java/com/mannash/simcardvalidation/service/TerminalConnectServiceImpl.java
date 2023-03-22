@@ -65,6 +65,8 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 			}
 			for (CardTerminal cardTerminal : list) {
 				try {
+
+					System.out.println("Card Terminal : " + cardTerminal.toString());
 					// cardTerminal.waitForCardPresent(10000);
 					TerminalInfo terminalInfo = new TerminalInfo();
 					terminalInfo.setCt(cardTerminal);
@@ -82,31 +84,38 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 							// this.logger.debug("Card is present : " + card);
 							cardChannel = card.getBasicChannel();
 							// ATR atr = card.getATR();
-
 						} catch (CardException e) {
-//							e.printStackTrace();
-							// this.logger.debug("Card connection is failed");
+							terminalInfo.setTerminalCardIccid(null);
+							terminalInfo.setImsi(null);
+//							System.out.println("Card connect Exception");
+//							this.simVerifyMasterThread2.displayLogs(_terminal,"Card not responding",-1);
+							continue;
+
 						}
 
 						try {
 							this.AID = getAID(cardTerminal);
 						} catch (Exception e) {
 							// this.logger.error("Exception in getAID");
+							System.out.println("AID exception");
 						}
-						String iccid = getICCID(cardTerminal);
-						String imsi = getIMSI(cardTerminal);
+						String iccid = null;
+						String imsi = null;
+						iccid = getICCID(cardTerminal);
+						System.out.println("ICCID IMpl : " + iccid);
+						imsi = getIMSI(cardTerminal);
+						System.out.println("IMSI impl : " + imsi);
 						if (iccid != null && !"".equalsIgnoreCase(iccid)) {
 							terminalInfo.setTerminalCardIccid(iccid);
 							terminalInfo.setImsi(imsi);
 						}
 					}
 				} catch (CardException cardException) {
-
+					System.out.println("Exception 1");
 
 					cardException.printStackTrace();
-
 				} catch (Exception cardException) {
-
+					System.out.println("Exception 2");
 					cardException.printStackTrace();
 
 				}
@@ -147,22 +156,25 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 
 	public String getICCID(CardTerminal cardTerminal) {
 		try {
-
+			String response =  null;
 //			cardTerminal = TerminalFactory.getDefault().terminals().list().get(0);
 			// sendRawApduNoPrint(cardTerminal, "A0A4000002 3F00");
 
 			sendRawApduNoPrint(cardTerminal, "00A4080402 2FE2");
-			String response = sendRawApduNoPrint(cardTerminal, "00B000000A");
+			response = sendRawApduNoPrint(cardTerminal, "00B000000A");
+			System.out.println("Response :  " + response);
 			if (response != null) {
 				return nibbleSwap(response);
 			} else {
-				// this.logger.debug("ICCID response is NUll");
+				return null;
 			}
 		} catch (Exception e) {
+			System.out.println("Exception from getICCID");
 			e.printStackTrace();
+			return null;
 			// this.logger.error("Exception occurred while connecting with Card");
 		}
-		return null;
+
 	}
 
 	public String getIMSI(CardTerminal cardTerminal) {
@@ -189,6 +201,7 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 			if (!str1.equals(null))
 				str1 = str1.substring(8, 40);
 		} catch (Exception e) {
+
 			// this.logger.error("Null Pointer Exception : " + str1);
 		}
 		return str1.toUpperCase();
@@ -238,6 +251,7 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 		try {
 			return sendCmd(cardTerminal, paramString);
 		} catch (Exception exception) {
+			System.out.println("INSIDE THE EXCEPTION OF SENDRAWAPDUNOPRINT");
 			// this.logger.error("Send APDU Error : " +paramString);
 		}
 		return null;

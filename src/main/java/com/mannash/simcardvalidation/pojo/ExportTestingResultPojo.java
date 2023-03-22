@@ -7,25 +7,27 @@ import java.time.LocalTime;
 
 public class ExportTestingResultPojo {
 
-    private LocalDate dateOfTesting;
+    private String dateOfTesting;
 
-    public LocalDate getDateOfTesting() {
+
+    private String timeOfTesting;
+
+    public String getDateOfTesting() {
         return dateOfTesting;
     }
 
-    public void setDateOfTesting(LocalDate dateOfTesting) {
+    public void setDateOfTesting(String dateOfTesting) {
         this.dateOfTesting = dateOfTesting;
     }
 
-    public LocalTime getTimeOfTesting() {
+    public String getTimeOfTesting() {
         return timeOfTesting;
     }
 
-    public void setTimeOfTesting(LocalTime timeOfTesting) {
+    public void setTimeOfTesting(String timeOfTesting) {
         this.timeOfTesting = timeOfTesting;
     }
 
-    private LocalTime timeOfTesting;
     private int terminalNumber;
     private String terminalICCID;
     private String terminalIMSI;
