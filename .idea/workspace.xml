@@ -11,29 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/SimVerify_multicards_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/SimVerify_multicards_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/DemoMain.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/LoginForm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/LoginFormController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/ProgressBarExample.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingMultiCardController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TerminalConnectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TerminalConnectServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/GridElement.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/GridElement.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/MyGrid.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/MyGrid.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/Testing-view.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/TestingViewDemo.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/Testing_multiCard.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/Testing_multiCard.fxml.bak" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/dynamicGrid.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/multiCard2.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/progress.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/splash-screen.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/splash-screen.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,8 +45,8 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/work/SIMCardValidationProject/SIMVerify/lib",
-    "project.structure.last.edited": "Artifacts",
+    "last_opened_file_path": "D:/Work/R&D/SIMVerify/lib/commons-csv-1.10.0.jar",
+    "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.26666668",
     "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"

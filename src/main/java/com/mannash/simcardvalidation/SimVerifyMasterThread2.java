@@ -733,6 +733,10 @@ public class SimVerifyMasterThread2 {
         }
     }
 
+    public void testMethod(){
+        System.out.println("this is test");
+    }
+
 
 }
 

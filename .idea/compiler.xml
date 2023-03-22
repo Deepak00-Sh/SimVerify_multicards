@@ -13,7 +13,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="SimVerify_multicards" options="--add-modules java.smartcardio" />
+      <module name="SimVerify_multicards" options="" />
     </option>
   </component>
 </project>
