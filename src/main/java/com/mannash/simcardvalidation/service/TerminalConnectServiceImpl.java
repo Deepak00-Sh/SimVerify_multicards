@@ -1,9 +1,7 @@
 package com.mannash.simcardvalidation.service;
 
 import com.mannash.simcardvalidation.SimVerifyLoggerThread;
-import com.mannash.simcardvalidation.SimVerifyMasterThread;
 import com.mannash.simcardvalidation.SimVerifyMasterThread2;
-import com.mannash.simcardvalidation.TestingController4;
 import com.mannash.simcardvalidation.pojo.TerminalInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

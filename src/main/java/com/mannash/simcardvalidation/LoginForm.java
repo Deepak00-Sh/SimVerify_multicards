@@ -27,24 +27,18 @@ public class LoginForm extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(icon);
         stage.setScene(splashScene);
-
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 System.exit(0);
             }
         });
-
-
         stage.show();
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
             stage.setScene(splashScene);
             stage.close();
             Stage loginStage = new Stage();
-
-
             loginStage.getIcons().add(icon);
-
             loginStage.setScene(loginScene);
             loginStage.setResizable(false);
             loginStage.setTitle("SIM Verify!");
@@ -58,11 +52,9 @@ public class LoginForm extends Application {
             });
         }));
         timeline.play();
-
     }
 
     public static void main(String[] args) {
         launch(args);
-
     }
 }

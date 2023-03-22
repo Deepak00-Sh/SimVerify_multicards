@@ -85,6 +85,11 @@
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.mannash.javafxapplication</groupId>
+            <artifactId>SIMCardValidationTool</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

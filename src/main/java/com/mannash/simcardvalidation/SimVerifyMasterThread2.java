@@ -35,8 +35,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
-
-import javafx.util.StringConverter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -54,7 +52,6 @@ import java.util.concurrent.*;
 public class SimVerifyMasterThread2 {
 
     SimVerifyLoggerThread loggerThread;
-
 
     //FXML elements
     @FXML
@@ -123,10 +120,7 @@ public class SimVerifyMasterThread2 {
     Thread thread1;
     private List<Future<?>> futureList = new ArrayList<>();
     List<TestingController4> controller4ThreadList = new ArrayList<>();
-
     Thread[] threads = new Thread[Thread.activeCount()];
-
-    static Map<String, Thread> testThreadMap = Collections.synchronizedMap(new HashMap<String, Thread>(20));
     private boolean headersPrinted = false;
 
     ConcurrentHashMap<Integer, ExportTestingResultPojo> cardTestingResultMap = new ConcurrentHashMap<Integer, ExportTestingResultPojo>();
@@ -333,47 +327,6 @@ public class SimVerifyMasterThread2 {
             exportIcon.setImage(exportButtonImage);
         });
     }
-
-////    public void setIndicatorToICCID(String iccid, Image image, int index) {
-//        if (iccid == null) {
-//            return;
-//        }
-//        this.cardsConnectedList.setCellFactory(lv -> new ListCell<String>() {
-//            private HBox content = new HBox();
-//            private Label iccidLabel = new Label();
-//            private ImageView imageView = new ImageView();
-//
-//            {
-//                HBox.setMargin(imageView, new Insets(0, 0, 0, 10));
-//
-//                imageView.setId("indicatorImageView");
-//
-//                // center the imageView vertically in the content HBox
-//                content.setAlignment(Pos.CENTER);
-//
-//                content.getChildren().addAll(iccidLabel, imageView);
-//                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-//            }
-//
-//            @Override
-//            protected void updateItem(String item, boolean empty) {
-//                super.updateItem(item, empty);
-//
-//                if (empty || item == null) {
-//                    setGraphic(null);
-//                } else {
-//                    iccidLabel.setText(item);
-//                    imageView.setImage(image);
-//                    imageView.setId("indicatorImageView");
-//                    imageView.setFitWidth(10);
-//                    imageView.setFitHeight(10);
-//                    setGraphic(content);
-//                }
-//            }
-//        });
-//        this.cardsConnectedList.getItems().add(index, iccid);
-//    }
-
     public void updateStackPaneData(int index, String iccid, String imsi) {
         Node node = mainGridPane.getChildren().get(index);
         // index 1 because there are 2 cells in a row (column 0 and column 1)
@@ -501,71 +454,6 @@ public class SimVerifyMasterThread2 {
         }
         this.cardsConnectedList.getItems().set(index, iccid);
     }
-
-//public void updateListViewColor(int index, Boolean testSuccessful) {
-//    ListView<String> listView = (ListView<String>) this.cardsConnectedList;
-//
-//    // Get the currently set cell factory
-//    Callback<ListView<String>, ListCell<String>> cellFactory = listView.getCellFactory();
-//
-//    // Set the cell factory to customize the appearance of the list items
-//    listView.setCellFactory(list -> new ListCell<String>() {
-//        @Override
-//        protected void updateItem(String item, boolean empty) {
-//            super.updateItem(item, empty);
-//
-//            if (item == null || empty) {
-//                setText(null);
-//                setBackground(null);
-//            } else {
-//                setText(item);
-//
-//                // Get the current background color of the item
-//                Background currentBackground = getBackground();
-//
-//                // Check if the item is the one to be updated
-//                if (getIndex() == index) {
-//                    // Set the new background color for the item
-//                    if (testSuccessful) {
-//                        System.out.println("INSIDE SETTING COLOR SUCESS");
-//                        setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
-//                    } else {
-//                        setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-//                    }
-//                } else if (currentBackground == null || currentBackground.getFills().isEmpty()) {
-//                    System.out.println("INSIDE OUTER ELSE IF");
-//                    // If the item is not the one to be updated and the current background is null, set it to the default color
-////                    setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-//                }
-//            }
-//        }
-//    });
-//
-//    // Restore the previously set cell factory after all updates are done
-//    listView.setCellFactory(cellFactory);
-//}
-
-
-//    public void updateListViewColor(int index, Boolean testSuccessful) {
-//        ListView<String> listView = (ListView<String>) this.cardsConnectedList;                             // Set the cell factory to customize the appearance of the list items
-//        ListCell<String> cell  = (ListCell<String>) this.cardsConnectedList.getItems().get(index);
-//        cell.setStyle("-fx-background-color: green;");
-//
-//        this.cardsConnectedList.getItems().set(index, cell);
-//    }
-
-    public void updateListViewColor(int index, Boolean testSuccessful) {
-        Callback<ListView<String>, ListCell<String>> cellFactory = this.cardsConnectedList.getCellFactory();
-        ListCell<String> cell = cellFactory.call(this.cardsConnectedList);
-//      ListCell<String> cell = (ListCell<String>) cardsConnectedList.getItems().get(index);
-        if (testSuccessful) {
-            cell.setBackground(new Background(new BackgroundFill(Color.LIGHTGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
-        } else {
-            cell.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-        }
-        cardsConnectedList.getItems().set(index, cell.getItem());
-    }
-
     private void startingLogTextArea() {
         if (!logTextAreaInitialize) {
             //Add Logs area
@@ -796,7 +684,6 @@ public class SimVerifyMasterThread2 {
         }
         if (!csvFile.exists()) {
             try {
-                System.out.println("################ creating csv file");
                 csvFile.createNewFile();
                 this.headersPrinted = false;
             } catch (IOException e) {
