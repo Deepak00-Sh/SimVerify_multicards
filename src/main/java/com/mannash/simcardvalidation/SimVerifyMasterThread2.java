@@ -38,6 +38,7 @@ import javafx.util.Duration;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+
 import javax.swing.text.StyledEditorKit;
 import java.io.File;
 import java.io.FileWriter;
@@ -263,7 +264,7 @@ public class SimVerifyMasterThread2 {
 
     public void onStartButtonPress() {
         if (startTestingButton.getImage().getUrl().contains("button_Start_Testing.png")) {
-            TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread);
+            TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);
             int numberOfTerminal = terminalConnectService.fetchTerminalCount();
             System.out.println("Number of terminal connected : " + numberOfTerminal);
             startTestingButton.setImage(cancelButton);
@@ -570,7 +571,7 @@ public class SimVerifyMasterThread2 {
 
     public void initializeTestingThreads() {
         System.out.println("inside the run");
-        TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread);
+        TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);
         List<TerminalInfo> terminalInfos = terminalConnectService.fetchTerminalInfo();
         Iterator<TerminalInfo> terminalInfo = terminalInfos.iterator();
         int index = 0;
@@ -654,6 +655,14 @@ public class SimVerifyMasterThread2 {
         Platform.runLater(() -> {
             logTextArea.appendText(log + "\n");
         });
+    }
+
+    public void displayLogs(String from, String to, String log, int widgetId) {
+        displayLogs("["+(widgetId+1)+"] "+" ["+from+" -> "+to+"] : "+log);
+    }
+
+    public void displayLogs(String from, String log,int widgetId) {
+        displayLogs("["+(widgetId+1)+"] "+" ["+from+"        ] : "+log);
     }
 
     public synchronized void updateTesting(int id) {
