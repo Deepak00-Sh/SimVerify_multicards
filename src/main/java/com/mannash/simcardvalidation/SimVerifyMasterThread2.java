@@ -10,6 +10,7 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -28,6 +29,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -131,7 +134,7 @@ public class SimVerifyMasterThread2 {
 
     @FXML
     public void onLoginButtonPress() throws IOException {
-//      TrakmeServerCommunicationService trakmeServerCommunicationService = new TrakmeServerCommunicationServiceImpl();
+      TrakmeServerCommunicationService trakmeServerCommunicationService = new TrakmeServerCommunicationServiceImpl(loggerThread);
         String userId = user_input.getText();
         String password = password_input.getText();
         String hardCodeUserId = "a";
@@ -266,6 +269,7 @@ public class SimVerifyMasterThread2 {
         if (startTestingButton.getImage().getUrl().contains("button_Start_Testing.png")) {
             TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);
             int numberOfTerminal = terminalConnectService.fetchTerminalCount();
+
             System.out.println("Number of terminal connected : " + numberOfTerminal);
             startTestingButton.setImage(cancelButton);
 
@@ -433,8 +437,9 @@ public class SimVerifyMasterThread2 {
                 Platform.runLater(() -> {
                     iccidValue.setText(iccid);
                     imsiValue.setText(imsi);
+                        this.cardsConnectedList.getItems().add(iccid);
                     widgetSlot.setText("" + (index + 1));
-                    this.cardsConnectedList.getItems().add(index, iccid);
+
 //                    setIndicatorToICCID(iccid, yellowIndicatorImage, index);
                 });
             });
@@ -448,10 +453,12 @@ public class SimVerifyMasterThread2 {
         // Check if the item matches the specified iccid
         Text iccid = new Text(item);
         if(testSuccessful){
-           iccid.setFill(Color.LIGHTGREEN);
+           iccid.setFill(Color.GREEN);
+           iccid.setFont(Font.font("System", FontWeight.BOLD, 12));
         }
         else if(!testSuccessful){
             iccid.setFill(Color.RED);
+            iccid.setFont(Font.font("System", FontWeight.BOLD, 12));
         }
         this.cardsConnectedList.getItems().set(index, iccid);
     }
@@ -556,6 +563,7 @@ public class SimVerifyMasterThread2 {
 //        cancelAllThreads();
         Parent logInPage = FXMLLoader.load(getClass().getResource("/com/mannash/javafxapplication/fxml/login-form.fxml"));
         Stage primaryStage = (Stage) startTestingButton.getScene().getWindow();
+        this.cardsConnectedList.getItems().clear();
         primaryStage.close();
         Stage primaryStage2 = new Stage();
         Scene scene = new Scene(logInPage);
@@ -575,6 +583,7 @@ public class SimVerifyMasterThread2 {
         List<TerminalInfo> terminalInfos = terminalConnectService.fetchTerminalInfo();
         Iterator<TerminalInfo> terminalInfo = terminalInfos.iterator();
         int index = 0;
+        this.cardsConnectedList.setItems(FXCollections.observableArrayList());
         while (terminalInfo.hasNext()) {
             System.out.println("index : " + index);
             TerminalInfo terminal = terminalInfo.next();
@@ -585,7 +594,6 @@ public class SimVerifyMasterThread2 {
             this.terminalsConnected++;
             if (iccid == null) {
                 updateWidgetIccidAndImsi(null, null, index);
-
             }
             if (iccid != null) {
                 cardConnectedCounter++;
@@ -608,10 +616,9 @@ public class SimVerifyMasterThread2 {
 //        List<Future<?>> futures = new ArrayList<>();
         for (int i = 0; i < terminals.size(); i++) {
             TerminalInfo terminal = terminals.get(i);
-            System.out.println("terminal~~~" + (terminal.getTerminalNumber()));
             if (terminal.getTerminalCardIccid() != null) {
                 int terminalNumber = terminal.getTerminalNumber();
-                System.out.println("Terminal Number ~~~ : " + (terminalNumber + 1));
+                System.out.println("Terminal Number ~~~ : " + (terminalNumber));
                 String threadName = terminal.getTerminalNumber() + "_" + terminal.getTerminalCardIccid();
                 TestingController4 controller4 = new TestingController4(threadName, terminal, this, i, this.loggerThread);
                 controller4ThreadList.add(controller4);
