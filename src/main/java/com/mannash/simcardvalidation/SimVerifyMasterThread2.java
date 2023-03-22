@@ -583,7 +583,7 @@ public class SimVerifyMasterThread2 {
         List<TerminalInfo> terminalInfos = terminalConnectService.fetchTerminalInfo();
         Iterator<TerminalInfo> terminalInfo = terminalInfos.iterator();
         int index = 0;
-        this.cardsConnectedList.setItems(FXCollections.observableArrayList());
+//        this.cardsConnectedList.setItems(FXCollections.observableArrayList());
         while (terminalInfo.hasNext()) {
             System.out.println("index : " + index);
             TerminalInfo terminal = terminalInfo.next();
