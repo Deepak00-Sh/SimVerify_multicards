@@ -31,10 +31,12 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 	public String _card = "C";
 	public String _device = "D";
 	public String _ui = "UI";
+	SimVerifyMasterThread2 simVerifyMasterThread2 ;
 
-	public TerminalConnectServiceImpl(SimVerifyLoggerThread loggerThread) {
+	public TerminalConnectServiceImpl(SimVerifyLoggerThread loggerThread, SimVerifyMasterThread2 masterThread) {
 		this.loggerThread = loggerThread;
 		this.loggerService = new LoggerServiceImpl();
+		this.simVerifyMasterThread2 = masterThread;
 	}
 
 	public List<TerminalInfo> fetchTerminalInfo() {
@@ -54,10 +56,12 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 		try {
 			list = terminalFactory.terminals().list();
 			if (list == null){
-				loggerThread.displayLogs(_terminal,"No device found",-1);
+				this.simVerifyMasterThread2.displayLogs(_terminal,"No device found",-1);
+				
+
 			}else {
-				loggerThread.displayLogs(_terminal,"Devices available",-1);
-				loggerThread.displayLogs(_terminal,_card,"Connecting to devices",-1);
+				this.simVerifyMasterThread2.displayLogs(_terminal,"Devices available",-1);
+				this.simVerifyMasterThread2.displayLogs(_terminal,_card,"Connecting to devices",-1);
 			}
 			for (CardTerminal cardTerminal : list) {
 				try {
@@ -110,7 +114,7 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
-			loggerThread.displayLogs(_terminal,"No device found",-1);
+			this.simVerifyMasterThread2.displayLogs(_terminal,"No device found",-1);
 			// this.logger.info("Terminal is not connected.");
 		}
 		return terminalInfos;

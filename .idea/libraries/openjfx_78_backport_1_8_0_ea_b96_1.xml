@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="openjfx-78-backport-1.8.0-ea-b96.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../SIMVerify/lib/openjfx-78-backport-1.8.0-ea-b96.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
