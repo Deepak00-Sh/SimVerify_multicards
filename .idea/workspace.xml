@@ -10,9 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/SimVerify_multicards_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/SimVerify_multicards_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/openjfx_78_backport_1_8_0_ea_b96_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_12_44_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_12_44_PM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_1_47_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_1_47_PM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_6_12_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_6_12_PM__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/LoggerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/LoggerServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TrakmeServerCommunicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TrakmeServerCommunicationServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +38,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -50,7 +60,8 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.26666668",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
+    "settings.editor.splitter.proportion": "0.24159022"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -113,7 +124,34 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+            </list>
           </value>
         </entry>
       </map>
@@ -129,5 +167,9 @@
     <MESSAGE value="Updated project till the client-side implementation without the cancelling all threads logic" />
     <MESSAGE value="vcs" />
     <option name="LAST_COMMIT_MESSAGE" value="vcs" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

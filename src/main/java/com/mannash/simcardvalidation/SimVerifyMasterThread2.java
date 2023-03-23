@@ -10,46 +10,42 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
+
 import javafx.util.Duration;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
-
-import javax.swing.text.StyledEditorKit;
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -134,11 +130,13 @@ public class SimVerifyMasterThread2 {
     ExportTestingResultPojo exportTestingResultPojo = new ExportTestingResultPojo();
     private Object csvLock = new Object();
 
+    private ExecutorService executorService;
+
 
 
     @FXML
     public void onLoginButtonPress() throws IOException {
-      TrakmeServerCommunicationService trakmeServerCommunicationService = new TrakmeServerCommunicationServiceImpl(loggerThread);
+      TrakmeServerCommunicationService trakmeServerCommunicationService = new TrakmeServerCommunicationServiceImpl();
         String userId = user_input.getText();
         String password = password_input.getText();
         String hardCodeUserId = "a";
@@ -308,15 +306,15 @@ public class SimVerifyMasterThread2 {
             this.thread1.start();
             System.out.println("Task 1 finished");
         } else if (startTestingButton.getImage().getUrl().contains("button_cancel")) {
-//          cancelAllThreads();
-            onStopButtonClicked();
+            stopThreads();
             for (int i = 0; i < this.terminalsConnected; i++) {
                 updateWidgetStatusImage(false, i);
                 updateWidgetStatusLabel("Testing Cancelled", i);
+//                updateListItemColor(i,false);
             }
-//          this.loggerThread.interrupt();
+////        this.loggerThread.interrupt();
             setDoneButton();
-            cardsConnectedList.getItems().clear();
+//          cardsConnectedList.getItems().clear();
         } else if (startTestingButton.getImage().getUrl().contains("done")) {
 
             reLoadTestingWindowData();
@@ -614,7 +612,7 @@ public class SimVerifyMasterThread2 {
 
     private void startTestingThreads(List<TerminalInfo> terminals) {
         int numThreads = Math.min(terminals.size(), Runtime.getRuntime().availableProcessors());
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        executorService = Executors.newFixedThreadPool(numThreads);
 //        List<Future<?>> futures = new ArrayList<>();
         for (int i = 0; i < terminals.size(); i++) {
             TerminalInfo terminal = terminals.get(i);
@@ -622,23 +620,25 @@ public class SimVerifyMasterThread2 {
                 int terminalNumber = terminal.getTerminalNumber();
                 System.out.println("Terminal Number ~~~ : " + (terminalNumber));
                 String threadName = terminal.getTerminalNumber() + "_" + terminal.getTerminalCardIccid();
-                TestingController4 controller4 = new TestingController4(threadName, terminal, this, i, this.loggerThread);
-                controller4ThreadList.add(controller4);
-                Future<?> future = executor.submit(controller4);
-                futureList.add(future);
+                TestingController4 controller = new TestingController4(threadName, terminal, this, i, this.loggerThread);
+                Thread thread = new Thread(controller);
+                controller4ThreadList.add(controller);
+                threadList.add(thread);
+                Future<?> future = executorService.submit(thread);
+//              futureList.add(future);
                 initializedThreads++;
             }
         }
-        for (Future<?> future : futureList) {
-            try {
-                future.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-        executor.shutdown();
+//        for (Future<?> future : futureList) {
+//            try {
+//                future.get();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        executorService.shutdown();
         System.out.println("testing done");
         this.loggerThread.displayLogs(_terminal, "Verification Completed", -1);
     }
@@ -648,18 +648,20 @@ public class SimVerifyMasterThread2 {
         System.out.println("testing stopped");
     }
 
-    private void stopThreads() {
-        Thread.enumerate(threads); // Iterate over each thread and interrupt if name matches
-        for (Thread thread : threads) {
-            if (thread != null) {
-                if (thread.getName().equals("Testing thread : 0")) {
-                    System.out.println("found!!");
-                    thread.interrupt();
-                }
-            }
-        }
-    }
 
+    private void stopThreads() {
+        for(TestingController4 testingController4 : controller4ThreadList){
+            testingController4.stopMainThread();
+        }
+        for(Thread thread : threadList) {
+                thread.stop();
+                thread.interrupt();
+                executorService.shutdownNow();
+                System.out.println("THread status : " + thread.isAlive());
+        }
+
+
+    }
     public void displayLogs(String log) {
         Platform.runLater(() -> {
             logTextArea.appendText(log + "\n");
@@ -683,6 +685,7 @@ public class SimVerifyMasterThread2 {
             System.out.println("testing done");
         }
     }
+
 
     @FXML
     public void onExportButtonPress() {
@@ -753,12 +756,6 @@ public class SimVerifyMasterThread2 {
             ex.printStackTrace();
         }
     }
-
-    public void testMethod(){
-        System.out.println("this is test");
-    }
-
-
 }
 
 
