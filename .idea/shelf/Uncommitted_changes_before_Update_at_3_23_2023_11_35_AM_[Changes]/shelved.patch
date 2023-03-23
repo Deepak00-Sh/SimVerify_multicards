@@ -1,0 +1,356 @@
+Index: src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.mannash.simcardvalidation;\r\nimport javafx.application.Platform;\r\nimport javafx.collections.FXCollections;\r\nimport javafx.collections.ObservableList;\r\nimport javafx.concurrent.Task;\r\nimport javafx.scene.control.TextArea;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.concurrent.*;\r\n\r\npublic class SimVerifyLoggerThread extends Task<String> {\r\n\r\n    //    private final ConcurrentLinkedQueue<String> logQueue = new ConcurrentLinkedQueue<>();\r\n    private final TextArea logTextArea;\r\n    private final BlockingQueue <String> logQueue = new LinkedBlockingQueue<>();\r\n    private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);\r\n    //    private final List<String> logBatch = new ArrayList<>();\r\n    private ObservableList<String> logBatch = FXCollections.observableArrayList();\r\n    private final int maxBatchSize = 50;\r\n    private final long batchIntervalMillis = 100;\r\n\r\n    public SimVerifyLoggerThread(TextArea logTextArea) {\r\n        this.logTextArea = logTextArea;\r\n        executorService.scheduleAtFixedRate(this::writeLogBatch, batchIntervalMillis, batchIntervalMillis, TimeUnit.MILLISECONDS);\r\n//        writeLogs();\r\n    }\r\n\r\n    public void displayLogs(String from, String to, String log, int widgetId) {\r\n        log(\"[\"+(widgetId+1)+\"] \"+\" [\"+from+\" -> \"+to+\"] : \"+log);\r\n    }\r\n\r\n    public void displayLogs(String from, String log,int widgetId) {\r\n        log(\"[\"+(widgetId+1)+\"] \"+\" [\"+from+\"        ] : \"+log);\r\n    }\r\n\r\n    public void log(String logMessage) {\r\n        logQueue.offer(logMessage);\r\n    }\r\n\r\n    private void writeLogBatch() {\r\n//        if (!logBatch.isEmpty()) {\r\n//            Platform.runLater(() -> {\r\n//                for (String logMessage : logBatch) {\r\n//                    logTextArea.appendText(logMessage + \"\\n\");\r\n//                }\r\n//            });\r\n//            logBatch.clear();\r\n//        }\r\n    }\r\n\r\n//    @Override\r\n//    public void run() {\r\n//        while (true) {\r\n//            try {\r\n//                String logMessage = logQueue.poll();\r\n//                logBatch.add(logMessage);\r\n//                if (logBatch.size() >= maxBatchSize) {\r\n//                    writeLogBatch();\r\n//                }\r\n//            } catch (Exception e) {\r\n//                e.printStackTrace();\r\n//            }\r\n//        }\r\n//    }\r\n\r\n//    @Override\r\n//    public void run() {\r\n//        writeLogs();\r\n//        System.out.println(\"void run\");\r\n//        while (true) {\r\n//            String message = logQueue.poll();\r\n//            if (message != null){\r\n//                writeLogs(message);\r\n//            }\r\n\r\n\r\n//            Task<Void> task = new Task<Void>() {\r\n//                String message = logQueue.poll();\r\n//                @Override\r\n//                protected Void call() throws Exception {\r\n//                    for (int i = 0; i < 5000; i++) {\r\n//\r\n//                    }\r\n//                    return null;\r\n//                }\r\n//            };\r\n\r\n//            new Thread(task).start();\r\n\r\n//            logBatch.add(message);\r\n//            if (logBatch.size() >= maxBatchSize) {\r\n//\r\n//                Task<Void> task = new Task<Void>() {\r\n//                    //            String message = logQueue.poll();\r\n//                    @Override\r\n//                    protected Void call() throws Exception {\r\n//                        System.out.println(\"from task\");\r\n//\r\n//                        Platform.runLater(() -> {\r\n//                                    for (String logMessage : logBatch) {\r\n//                                        logTextArea.appendText(logMessage + \"\\n\");\r\n//                                    }\r\n//                        });logBatch.clear();\r\n//                      return null;\r\n//                    }\r\n//\r\n//\r\n//            }\r\n\r\n//        }\r\n//    }\r\n\r\n//    public void writeLogs(){\r\n//\r\n//\r\n//        System.out.println(\"write logs\");\r\n//        Task<Void> task = new Task<Void>() {\r\n//            @Override\r\n//            protected Void call() throws Exception {\r\n//                StringBuilder logsBuilder = new StringBuilder();\r\n//                int logCounter = 0;\r\n//                String log;\r\n//                while (true) {\r\n//                    logCounter++;\r\n////                String message = logQueue.take();\r\n////                if (message != null){\r\n////                    if(logCounter % 100 == 0){\r\n////                        try {\r\n////                            Thread.sleep(10);\r\n////                        } catch (InterruptedException e) {\r\n////                            throw new RuntimeException(e);\r\n////                        }\r\n////                        logCounter = 0;\r\n////                    }\r\n//\r\n//                    for (int i = 0; i < 10; i++){\r\n////                        log = logQueue.poll();\r\n//                        log = logQueue.take();\r\n//                        System.out.println(log);\r\n//                        logsBuilder.append(log).append(\"\\n\");\r\n//                    }\r\n//                    String message = logsBuilder.toString();\r\n//                    Platform.runLater(() -> {\r\n//                        logTextArea.appendText(message + \"\\n\");\r\n//                    });\r\n////                }\r\n//\r\n//            }\r\n//            }\r\n//        };\r\n//        new Thread(task).start();\r\n//    }\r\n\r\n//    @Override\r\n//    public void interrupt() {\r\n//        executorService.shutdownNow();\r\n//        super.interrupt();\r\n//    }\r\n\r\n    @Override\r\n    protected String call() throws Exception {\r\n        while (true){\r\n            String message = logQueue.take();\r\n            if (message != null){\r\n\r\n                updateValue(logQueue.take());\r\n\r\n            }\r\n        }\r\n//        return null;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java b/src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java
+--- a/src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java	(revision ba870f13722fc1b222ea094df1e362ae5ba6435c)
++++ b/src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java	(date 1679550896142)
+@@ -10,19 +10,17 @@
+ import java.util.concurrent.*;
+ 
+ public class SimVerifyLoggerThread extends Task<String> {
+-
+-    //    private final ConcurrentLinkedQueue<String> logQueue = new ConcurrentLinkedQueue<>();
+     private final TextArea logTextArea;
+     private final BlockingQueue <String> logQueue = new LinkedBlockingQueue<>();
+     private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
+-    //    private final List<String> logBatch = new ArrayList<>();
++    
+     private ObservableList<String> logBatch = FXCollections.observableArrayList();
+     private final int maxBatchSize = 50;
+     private final long batchIntervalMillis = 100;
+ 
+     public SimVerifyLoggerThread(TextArea logTextArea) {
+         this.logTextArea = logTextArea;
+-        executorService.scheduleAtFixedRate(this::writeLogBatch, batchIntervalMillis, batchIntervalMillis, TimeUnit.MILLISECONDS);
++//        executorService.scheduleAtFixedRate(this::writeLogBatch, batchIntervalMillis, batchIntervalMillis, TimeUnit.MILLISECONDS);
+ //        writeLogs();
+     }
+ 
+@@ -38,125 +36,8 @@
+         logQueue.offer(logMessage);
+     }
+ 
+-    private void writeLogBatch() {
+-//        if (!logBatch.isEmpty()) {
+-//            Platform.runLater(() -> {
+-//                for (String logMessage : logBatch) {
+-//                    logTextArea.appendText(logMessage + "\n");
+-//                }
+-//            });
+-//            logBatch.clear();
+-//        }
+-    }
+-
+-//    @Override
+-//    public void run() {
+-//        while (true) {
+-//            try {
+-//                String logMessage = logQueue.poll();
+-//                logBatch.add(logMessage);
+-//                if (logBatch.size() >= maxBatchSize) {
+-//                    writeLogBatch();
+-//                }
+-//            } catch (Exception e) {
+-//                e.printStackTrace();
+-//            }
+-//        }
+-//    }
+-
+-//    @Override
+-//    public void run() {
+-//        writeLogs();
+-//        System.out.println("void run");
+-//        while (true) {
+-//            String message = logQueue.poll();
+-//            if (message != null){
+-//                writeLogs(message);
+-//            }
+-
+ 
+-//            Task<Void> task = new Task<Void>() {
+-//                String message = logQueue.poll();
+-//                @Override
+-//                protected Void call() throws Exception {
+-//                    for (int i = 0; i < 5000; i++) {
+-//
+-//                    }
+-//                    return null;
+-//                }
+-//            };
+ 
+-//            new Thread(task).start();
+-
+-//            logBatch.add(message);
+-//            if (logBatch.size() >= maxBatchSize) {
+-//
+-//                Task<Void> task = new Task<Void>() {
+-//                    //            String message = logQueue.poll();
+-//                    @Override
+-//                    protected Void call() throws Exception {
+-//                        System.out.println("from task");
+-//
+-//                        Platform.runLater(() -> {
+-//                                    for (String logMessage : logBatch) {
+-//                                        logTextArea.appendText(logMessage + "\n");
+-//                                    }
+-//                        });logBatch.clear();
+-//                      return null;
+-//                    }
+-//
+-//
+-//            }
+-
+-//        }
+-//    }
+-
+-//    public void writeLogs(){
+-//
+-//
+-//        System.out.println("write logs");
+-//        Task<Void> task = new Task<Void>() {
+-//            @Override
+-//            protected Void call() throws Exception {
+-//                StringBuilder logsBuilder = new StringBuilder();
+-//                int logCounter = 0;
+-//                String log;
+-//                while (true) {
+-//                    logCounter++;
+-////                String message = logQueue.take();
+-////                if (message != null){
+-////                    if(logCounter % 100 == 0){
+-////                        try {
+-////                            Thread.sleep(10);
+-////                        } catch (InterruptedException e) {
+-////                            throw new RuntimeException(e);
+-////                        }
+-////                        logCounter = 0;
+-////                    }
+-//
+-//                    for (int i = 0; i < 10; i++){
+-////                        log = logQueue.poll();
+-//                        log = logQueue.take();
+-//                        System.out.println(log);
+-//                        logsBuilder.append(log).append("\n");
+-//                    }
+-//                    String message = logsBuilder.toString();
+-//                    Platform.runLater(() -> {
+-//                        logTextArea.appendText(message + "\n");
+-//                    });
+-////                }
+-//
+-//            }
+-//            }
+-//        };
+-//        new Thread(task).start();
+-//    }
+-
+-//    @Override
+-//    public void interrupt() {
+-//        executorService.shutdownNow();
+-//        super.interrupt();
+-//    }
+ 
+     @Override
+     protected String call() throws Exception {
+Index: src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.mannash.simcardvalidation;\r\n\r\nimport com.mannash.simcardvalidation.pojo.ExportTestingResultPojo;\r\nimport com.mannash.simcardvalidation.pojo.TerminalInfo;\r\nimport com.mannash.simcardvalidation.service.TerminalConnectService;\r\nimport com.mannash.simcardvalidation.service.TerminalConnectServiceImpl;\r\nimport com.mannash.simcardvalidation.service.TrakmeServerCommunicationService;\r\nimport com.mannash.simcardvalidation.service.TrakmeServerCommunicationServiceImpl;\r\nimport javafx.animation.PauseTransition;\r\nimport javafx.application.Platform;\r\nimport javafx.beans.value.ChangeListener;\r\nimport javafx.beans.value.ObservableValue;\r\nimport javafx.collections.FXCollections;\r\nimport javafx.collections.ObservableList;\r\nimport javafx.concurrent.Task;\r\nimport javafx.event.EventHandler;\r\nimport javafx.fxml.FXML;\r\nimport javafx.fxml.FXMLLoader;\r\nimport javafx.geometry.Insets;\r\nimport javafx.geometry.NodeOrientation;\r\nimport javafx.geometry.Pos;\r\nimport javafx.scene.Node;\r\nimport javafx.scene.Parent;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.control.*;\r\nimport javafx.scene.image.Image;\r\nimport javafx.scene.image.ImageView;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.layout.*;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.scene.shape.Rectangle;\r\nimport javafx.scene.text.Font;\r\nimport javafx.scene.text.FontWeight;\r\nimport javafx.scene.text.Text;\r\nimport javafx.stage.Modality;\r\nimport javafx.stage.Screen;\r\nimport javafx.stage.Stage;\r\nimport javafx.stage.WindowEvent;\r\nimport javafx.util.Callback;\r\nimport javafx.util.Duration;\r\nimport org.apache.commons.csv.CSVFormat;\r\nimport org.apache.commons.csv.CSVPrinter;\r\n\r\n\r\nimport javax.swing.text.StyledEditorKit;\r\nimport java.io.File;\r\nimport java.io.FileWriter;\r\nimport java.io.IOException;\r\nimport java.text.SimpleDateFormat;\r\nimport java.time.LocalDateTime;\r\nimport java.time.format.DateTimeFormatter;\r\nimport java.util.*;\r\nimport java.util.concurrent.*;\r\n\r\n\r\npublic class SimVerifyMasterThread2 {\r\n\r\n    SimVerifyLoggerThread loggerThread;\r\n\r\n    //FXML elements\r\n    @FXML\r\n    private TextField user_input;\r\n    @FXML\r\n    private PasswordField password_input;\r\n    @FXML\r\n    private Label promptLabel;\r\n    @FXML\r\n    private Button loginButton;\r\n    @FXML\r\n    private GridPane mainGridPane;\r\n    @FXML\r\n    private VBox simCardVbox;\r\n\r\n    @FXML\r\n    private Label exportMessage;\r\n\r\n    @FXML\r\n    private ImageView startTestingButton;\r\n\r\n    @FXML\r\n    private static ListView cardsConnectedList;\r\n\r\n    @FXML\r\n    private ImageView exportIcon;\r\n\r\n\r\n    //runtime elements\r\n    ScrollPane pane;\r\n    //Image Views\r\n    Image cancelButton = new Image(\"/com/mannash/javafxapplication/fxml/images/button_cancel.png\");\r\n    Image processingImage = new Image(\"/com/mannash/javafxapplication/fxml/images/loading14.gif\");\r\n    Image doneImage = new Image(\"/com/mannash/javafxapplication/fxml/images/done4.gif\");\r\n    Image questionMarkImage = new Image(\"/com/mannash/javafxapplication/fxml/images/question-mark.png\");\r\n    Image startButtonImage = new Image(\"/com/mannash/javafxapplication/fxml/images/button_Start_Testing.png\");\r\n\r\n    //Indicator Images to listView\r\n//  Image redIndicatorImage = new Image(\"/com/mannash/javafxapplication/fxml/images/button_cancel.png\");\r\n    Image greenIndicatorImage = new Image(\"/com/mannash/javafxapplication/fxml/images/greenIndicator.gif\");\r\n    Image yellowIndicatorImage = new Image(\"/com/mannash/javafxapplication/fxml/images/yellow (1).gif\");\r\n    Image exportButtonImage = new Image(\"/com/mannash/javafxapplication/fxml/images/export.png\");\r\n    //LogtextArea\r\n    TextArea logTextArea = new TextArea();\r\n\r\n    //Task running\r\n    private Task<Boolean> task1;\r\n\r\n    //global variables for widgets\r\n    public static int numRows = 4;\r\n    public static int numCols = 4;\r\n    public static int elementRow = 0;\r\n    public static int elementColumn = 0;\r\n    public String _terminal = \"T\";\r\n    public String _card = \"C\";\r\n    public String _device = \"D\";\r\n    public String _ui = \"UI\";\r\n    PauseTransition pause = new PauseTransition(Duration.seconds(0));\r\n    StackPane[] cardWidget = new StackPane[16];\r\n    //private Stage primaryTestingStage = null;\r\n    public List<Thread> threadList = new ArrayList<Thread>();\r\n    int cardConnectedCounter = 0;\r\n    int finishedThreads = 0;\r\n    int initializedThreads = 0;\r\n    int terminalsConnected = 0;\r\n    Boolean logTextAreaInitialize = false;\r\n    //Thread for on start button Press\r\n    Thread thread1;\r\n    private List<Future<?>> futureList = new ArrayList<>();\r\n    List<TestingController4> controller4ThreadList = new ArrayList<>();\r\n    Thread[] threads = new Thread[Thread.activeCount()];\r\n    private boolean headersPrinted = false;\r\n\r\n    ConcurrentHashMap<Integer, ExportTestingResultPojo> cardTestingResultMap = new ConcurrentHashMap<Integer, ExportTestingResultPojo>();\r\n\r\n    ExportTestingResultPojo exportTestingResultPojo = new ExportTestingResultPojo();\r\n    private Object csvLock = new Object();\r\n\r\n\r\n\r\n    @FXML\r\n    public void onLoginButtonPress() throws IOException {\r\n      TrakmeServerCommunicationService trakmeServerCommunicationService = new TrakmeServerCommunicationServiceImpl(loggerThread);\r\n        String userId = user_input.getText();\r\n        String password = password_input.getText();\r\n        String hardCodeUserId = \"a\";\r\n        String hardCodePassword = \"a\";\r\n        if (userId.equalsIgnoreCase(\"store1@airtel.in\") && password.equalsIgnoreCase(hardCodePassword)) {\r\n            Stage primaryStage = (Stage) loginButton.getScene().getWindow();\r\n            primaryStage.close();\r\n            loadTestingWindowData();\r\n        } else if (userId.equalsIgnoreCase(\"simlab@airtel.in\") && password.equalsIgnoreCase(hardCodePassword)) {\r\n            Stage primaryStage = (Stage) loginButton.getScene().getWindow();\r\n            primaryStage.close();\r\n            loadTestingWindowData();\r\n        } else if (userId.equalsIgnoreCase(hardCodeUserId) && password.equalsIgnoreCase(hardCodePassword)) {\r\n            Stage primaryStage = (Stage) loginButton.getScene().getWindow();\r\n            primaryStage.close();\r\n            loadTestingWindowData();\r\n        } else {\r\n            promptLabel.setTextFill(Color.rgb(255, 0, 0));\r\n            promptLabel.setText(\"Invalid username or password!\");\r\n        }\r\n    }\r\n\r\n    //keyboard handling of loginscreen\r\n    @FXML\r\n    private void handleKeyForPassword(javafx.scene.input.KeyEvent event) {\r\n        if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {\r\n            loginButton.fire();\r\n        } else if (event.getCode() == javafx.scene.input.KeyCode.TAB && event.isShiftDown()) {\r\n            event.consume();\r\n            user_input.requestFocus();\r\n        } else if (event.getCode() == javafx.scene.input.KeyCode.TAB) {\r\n            event.consume();\r\n            loginButton.requestFocus();\r\n        }\r\n    }\r\n\r\n    @FXML\r\n    private void handleKeyForUserInput(javafx.scene.input.KeyEvent event) {\r\n        if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {\r\n            loginButton.fire();\r\n        } else if (event.getCode() == javafx.scene.input.KeyCode.TAB && event.isShiftDown()) {\r\n            event.consume();\r\n            loginButton.requestFocus();\r\n        } else if (event.getCode() == javafx.scene.input.KeyCode.TAB) {\r\n            event.consume();\r\n            password_input.requestFocus();\r\n        }\r\n    }\r\n\r\n    @FXML\r\n    private void handleKeyForLoginButton(javafx.scene.input.KeyEvent event) {\r\n        if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {\r\n            loginButton.fire();\r\n        } else if (event.getCode() == javafx.scene.input.KeyCode.TAB && event.isShiftDown()) {\r\n            event.consume();\r\n            password_input.requestFocus();\r\n        } else if (event.getCode() == javafx.scene.input.KeyCode.TAB) {\r\n            event.consume();\r\n            user_input.requestFocus();\r\n        }\r\n    }\r\n\r\n    public void loadTestingWindowData() throws IOException {\r\n        SimVerifyMasterThread2.elementRow = 0;\r\n        SimVerifyMasterThread2.elementColumn = 0;\r\n        Image icon = new Image(\"/com/mannash/javafxapplication/fxml/images/airtelair2.png\");\r\n        Parent mainPage = FXMLLoader.load(getClass().getResource(\"/com/mannash/javafxapplication/fxml/MyGrid.fxml\"));\r\n        Stage primaryStage = new Stage();\r\n        Scene scene = new Scene(mainPage);\r\n        primaryStage.setTitle(\"SIM Verify!\");\r\n        primaryStage.getIcons().add(icon);\r\n        primaryStage.setMaximized(true);\r\n//        primaryStage.setResizable(false);\r\n        primaryStage.setScene(scene);\r\n        for (int i = 0; i < 16; i++) {\r\n            double delay = 0.05;\r\n            int id = i;\r\n            PauseTransition pause = new PauseTransition(Duration.seconds(delay * i));\r\n            pause.setOnFinished(event -> {\r\n                addCardWidget(id);\r\n            });\r\n            pause.play();\r\n        }\r\n        primaryStage.show();\r\n        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {\r\n            @Override\r\n            public void handle(WindowEvent event) {\r\n                System.exit(0);\r\n            }\r\n        });\r\n        GridPane gridPane = (GridPane) scene.lookup(\"#mainGridPane\");\r\n        VBox root = (VBox) scene.lookup(\"#cardsConnectedVbox\");\r\n        this.mainGridPane = gridPane;\r\n        mainGridPane.setHgap(10);\r\n        mainGridPane.setVgap(10);\r\n        ListView<String> cardsConnectedList = (ListView<String>) scene.lookup(\"#cardsConnectedList\");\r\n        cardsConnectedList.prefHeightProperty().bind(root.heightProperty());\r\n        cardsConnectedList.maxHeight(Double.MAX_VALUE);\r\n        cardsConnectedList.setMinHeight(primaryStage.getMinHeight());\r\n        this.cardsConnectedList = cardsConnectedList;\r\n        Image backgroundImage = new Image(\"/com/mannash/javafxapplication/fxml/images/airtel-logo-f.png\");\r\n        BackgroundSize backgroundSize = new BackgroundSize(700, 500, false, false, false, false);\r\n        if (backgroundImage.isError()) {\r\n            System.out.println(\"Error loading background image: \" + backgroundImage.getException().getMessage());\r\n        }\r\n        BackgroundImage background = new BackgroundImage(backgroundImage,\r\n                BackgroundRepeat.NO_REPEAT,\r\n                BackgroundRepeat.NO_REPEAT,\r\n                BackgroundPosition.CENTER,\r\n                backgroundSize);\r\n        mainGridPane.setBackground(new Background(background));\r\n    }\r\n\r\n    public void reLoadTestingWindowData() {\r\n        logTextAreaInitialize = true;\r\n        cardsConnectedList.getItems().clear();\r\n        initializedThreads = 0;\r\n        finishedThreads = 0;\r\n\r\n        logTextArea.setText(\"\");\r\n        for (int i = 0; i < 16; i++) {\r\n            int id = i;\r\n            reLoadCardWidget(id);\r\n        }\r\n\r\n        exportMessage.setVisible(false);\r\n        exportIcon.setVisible(false);\r\n        setStartButton();\r\n        threadList.clear();\r\n    }\r\n\r\n    public void onStartButtonPress() {\r\n        if (startTestingButton.getImage().getUrl().contains(\"button_Start_Testing.png\")) {\r\n            cardTestingResultMap.clear();\r\n            TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);\r\n            int numberOfTerminal = terminalConnectService.fetchTerminalCount();\r\n\r\n            System.out.println(\"Number of terminal connected : \" + numberOfTerminal);\r\n            startTestingButton.setImage(cancelButton);\r\n\r\n            startingLogTextArea();\r\n            task1 = new Task<Boolean>() {\r\n                @Override\r\n                protected Boolean call() throws Exception {\r\n                    System.out.println(\"From task1\");\r\n                    for (int i = 0; i < numberOfTerminal; i++) {\r\n                        System.out.println(\"For loop count : \" + i);\r\n                        int a = i;\r\n                        try {\r\n                            Thread.sleep(1000);\r\n                        } catch (InterruptedException e) {\r\n                            e.printStackTrace();\r\n                        }\r\n                        updateStackPaneData(a, \"-\", \"-\");\r\n\r\n                    }\r\n                    return true;\r\n                }\r\n            };\r\n            task1.setOnSucceeded(event1 -> {\r\n                System.out.println(task1.getValue());\r\n\r\n                System.out.println(\"Task 1 Succeeded\");\r\n                initializeTestingThreads();\r\n            });\r\n            this.thread1 = new Thread(task1);\r\n            this.thread1.start();\r\n            System.out.println(\"Task 1 finished\");\r\n        } else if (startTestingButton.getImage().getUrl().contains(\"button_cancel\")) {\r\n//          cancelAllThreads();\r\n            onStopButtonClicked();\r\n            for (int i = 0; i < this.terminalsConnected; i++) {\r\n                updateWidgetStatusImage(false, i);\r\n                updateWidgetStatusLabel(\"Testing Cancelled\", i);\r\n            }\r\n//          this.loggerThread.interrupt();\r\n            setDoneButton();\r\n            cardsConnectedList.getItems().clear();\r\n        } else if (startTestingButton.getImage().getUrl().contains(\"done\")) {\r\n\r\n            reLoadTestingWindowData();\r\n        }\r\n    }\r\n\r\n    public void setDoneButton() {\r\n        startTestingButton.setImage(doneImage);\r\n    }\r\n\r\n    public void setStartButton() {\r\n        startTestingButton.setImage(startButtonImage);\r\n    }\r\n\r\n    public void setExportButton() {\r\n        Platform.runLater(() -> {\r\n            exportIcon.setVisible(true);\r\n            exportIcon.setDisable(false);\r\n            exportIcon.setImage(exportButtonImage);\r\n        });\r\n    }\r\n    public void updateStackPaneData(int index, String iccid, String imsi) {\r\n        Node node = mainGridPane.getChildren().get(index);\r\n        // index 1 because there are 2 cells in a row (column 0 and column 1)\r\n        if (node instanceof StackPane) {\r\n            StackPane stackPane = (StackPane) node;\r\n            // Find the Label inside the StackPane with fx:id \"iccid_value_label\"\r\n            cardWidget[index] = (StackPane) stackPane.lookup(\"#cardWidget_\" + index);\r\n            Platform.runLater(() -> {\r\n                try {\r\n                    cardWidget[index].setVisible(true);\r\n                    Label iccidValue = (Label) cardWidget[index].lookup(\"#iccid_value_label\");\r\n                    Label imsiValue = (Label) cardWidget[index].lookup(\"#imsi_value_label\");\r\n                    Label statusLabel = (Label) cardWidget[index].lookup(\"#status_label\");\r\n                    ImageView statusImage = (ImageView) cardWidget[index].lookup(\"#status_image\");\r\n                    iccidValue.setText(iccid);\r\n                    imsiValue.setText(imsi);\r\n                    this.cardsConnectedList.getItems().add(index, iccid);\r\n                    System.out.println(\"Task1 runLater : \" + index);\r\n//                  statusImage.setImage(processingImage);\r\n                    statusLabel.setText(\"Waiting for card\");\r\n                } catch (Exception e) {\r\n                    e.printStackTrace();\r\n                }\r\n            });\r\n        }\r\n    }\r\n    public void updateWidgetStatusLabel(String status, int index) {\r\n        Node node = mainGridPane.getChildren().get(index);\r\n        if (node instanceof StackPane) {\r\n            StackPane stackPane = (StackPane) node;\r\n            stackPane.setStyle(\"-fx-background-color: #FFB562; -fx-background-radius: 15;\");\r\n            StackPane cardWidget = (StackPane) stackPane.lookup(\"#cardWidget_\" + index);\r\n            Label statusLabel = (Label) cardWidget.lookup(\"#status_label\");\r\n            pause.setOnFinished(event -> {\r\n                Platform.runLater(() -> {\r\n                    statusLabel.setText(status);\r\n                });\r\n            });\r\n            pause.play();\r\n        }\r\n    }\r\n\r\n    public void updateWidgetStatusImage(Image image, int index) {\r\n        Node node = mainGridPane.getChildren().get(index);\r\n        if (node instanceof StackPane) {\r\n            StackPane stackPane = (StackPane) node;\r\n            StackPane cardWidget = (StackPane) stackPane.lookup(\"#cardWidget_\" + index);\r\n            ImageView statusImage = (ImageView) cardWidget.lookup(\"#status_image\");\r\n            Platform.runLater(() -> {\r\n                statusImage.setImage(image);\r\n            });\r\n\r\n        }\r\n    }\r\n\r\n    public void updateWidgetStatusImage(Boolean testSuccessful, int index) {\r\n        Node node = mainGridPane.getChildren().get(index);\r\n        if (node instanceof StackPane) {\r\n            StackPane stackPane = (StackPane) node;\r\n            // Find the Label inside the StackPane with fx:id \"iccid_value_label\"\r\n            StackPane cardWidget = (StackPane) stackPane.lookup(\"#cardWidget_\" + index);\r\n            Label iccid = (Label) stackPane.lookup(\"#iccid_value_label\");\r\n            ImageView statusImage = (ImageView) cardWidget.lookup(\"#status_image\");\r\n            Image greenCheck = new Image(\"com/mannash/javafxapplication/fxml/images/greenRight.png\");\r\n            Image redCross = new Image(\"com/mannash/javafxapplication/fxml/images/redCross.png\");\r\n            pause.setOnFinished(event -> {\r\n                Platform.runLater(() -> {\r\n                    if (testSuccessful) {\r\n                        statusImage.setImage(greenCheck);\r\n                        stackPane.setStyle(\"-fx-background-color: #82CD47; -fx-background-radius: 15;\");\r\n//                        updateIndicatorImage(iccid.getText(), greenIndicatorImage, index);\r\n                        updateListItemColor(index, testSuccessful);\r\n\r\n                    } else {\r\n                        statusImage.setImage(redCross);\r\n                        stackPane.setStyle(\"-fx-background-color: #FF0000; -fx-background-radius: 15;\");\r\n//                        updateIndicatorImage(iccid.getText(), yellowIndicatorImage, index);\r\n                        updateListItemColor(index, testSuccessful);\r\n                    }\r\n                });\r\n            });\r\n            pause.play();\r\n        }\r\n    }\r\n    public void updateWidgetIccidAndImsi(String iccid, String imsi, int index) {\r\n        Node node = mainGridPane.getChildren().get(index);\r\n        if (node instanceof StackPane) {\r\n            StackPane stackPane = (StackPane) node;\r\n            // Find the Label inside the StackPane with fx:id \"iccid_value_label\"\r\n            StackPane cardWidget = (StackPane) stackPane.lookup(\"#cardWidget_\" + index);\r\n            Label iccidValue = (Label) cardWidget.lookup(\"#iccid_value_label\");\r\n            Label imsiValue = (Label) cardWidget.lookup(\"#imsi_value_label\");\r\n            Label widgetSlot = (Label) cardWidget.lookup(\"#widgetSlot\");\r\n//            if (iccid == null) {\r\n//                Platform.runLater(() -> {\r\n//                    this.cardsConnectedList.getItems().set(index,\"-\");\r\n//                    widgetSlot.setText(\"\" + (index + 1));\r\n//                    widgetSlot.setStyle(\"\");\r\n//                });\r\n//                return;\r\n//            }\r\n            pause.setOnFinished(event -> {\r\n                Platform.runLater(() -> {\r\n                    iccidValue.setText(iccid);\r\n                    imsiValue.setText(imsi);\r\n                    this.cardsConnectedList.getItems().set(index,iccid);\r\n                    widgetSlot.setText(\"\" + (index + 1));\r\n//                    setIndicatorToICCID(iccid, yellowIndicatorImage, index);\r\n                });\r\n            });\r\n            pause.play();\r\n        }\r\n    }\r\n\r\n    public void updateListItemColor(int index , Boolean testSuccessful) {\r\n        // Get the item at the specified index\r\n        String item = (String) this.cardsConnectedList.getItems().get(index);\r\n        // Check if the item matches the specified iccid\r\n        Text iccid = new Text(item);\r\n        if(testSuccessful){\r\n           iccid.setFill(Color.GREEN);\r\n           iccid.setFont(Font.font(\"System\", FontWeight.BOLD, 12));\r\n        }\r\n        else if(!testSuccessful){\r\n            iccid.setFill(Color.RED);\r\n            iccid.setFont(Font.font(\"System\", FontWeight.BOLD, 12));\r\n        }\r\n        this.cardsConnectedList.getItems().set(index, iccid);\r\n    }\r\n    private void startingLogTextArea() {\r\n        if (!logTextAreaInitialize) {\r\n            //Add Logs area\r\n            logTextArea.setPrefSize(simCardVbox.getPrefWidth(), 550);\r\n            logTextArea.positionCaret(logTextArea.getLength());\r\n            logTextArea.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);\r\n            logTextArea.setEditable(false);\r\n            logTextArea.viewOrderProperty();\r\n\r\n            logTextArea.getStyleClass().add(\"text-area-left-aligned\");\r\n            logTextArea.setStyle(\"-fx-background-color: #e3f1fe; -text-area-background: #e3f1fe; text-area-background: #e3f1fe;-fx-border-color: transparent; -fx-border-width: 0; -fx-border-image-width: 0; -fx-background-insets: 0; -fx-padding: 0; -fx-background-image: null; -fx-region-background: null;-fx-border-insets: 0; -fx-background-size:0; -fx-border-image-insets:0;\");\r\n            pane = new ScrollPane(logTextArea);\r\n            Node horizontalScrollBar = pane.lookup(\".scroll-bar:horizontal\");\r\n            if (horizontalScrollBar != null) {\r\n                horizontalScrollBar.setStyle(\"-fx-pref-width: 1px;\");\r\n            }\r\n            pane.setStyle(\"-fx-background-color: #e3f1fe; -fx-border-color: transparent; -fx-border-width: 0; -fx-border-image-width: 0; -fx-background-image: null; -fx-region-background: null;-fx-border-insets: 0; -fx-background-size:0; -fx-border-image-insets:0;\");\r\n            pane.setFitToWidth(true);\r\n            pane.setFitToHeight(true);\r\n\r\n            pane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);\r\n            simCardVbox.getChildren().add(pane);\r\n\r\n            startLogging();\r\n\r\n        }\r\n    }\r\n\r\n    public void startLogging() {\r\n        this.loggerThread = new SimVerifyLoggerThread(logTextArea);\r\n        this.loggerThread.valueProperty().addListener(new ChangeListener<String>() {\r\n            @Override\r\n            public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {\r\n                displayLogs(newValue);\r\n            }\r\n        });\r\n        Thread t = new Thread(this.loggerThread);\r\n        t.setDaemon(true);\r\n        t.start();\r\n    }\r\n\r\n    private void addCardWidget(int id) {\r\n        StackPane root = null;\r\n        try {\r\n            FXMLLoader loader = new FXMLLoader(getClass().getResource(\"/com/mannash/javafxapplication/fxml/GridElement.fxml\"));\r\n            root = loader.load();\r\n            StackPane cardWidget = (StackPane) root.lookup(\"#rootPane\");\r\n            Label iccidValue = (Label) cardWidget.lookup(\"#iccid_value_label\");\r\n            Label imsiValue = (Label) cardWidget.lookup(\"#imsi_value_label\");\r\n            cardWidget.setId(\"cardWidget_\" + id);\r\n            StackPane finalRoot1 = root;\r\n\r\n            if (SimVerifyMasterThread2.elementColumn == SimVerifyMasterThread2.numCols) {\r\n                SimVerifyMasterThread2.elementRow++;\r\n                SimVerifyMasterThread2.elementColumn = 0;\r\n            }\r\n\r\n            if (SimVerifyMasterThread2.elementRow < SimVerifyMasterThread2.numRows && SimVerifyMasterThread2.elementColumn < SimVerifyMasterThread2.numCols) {\r\n                int _elementColumn = elementColumn;\r\n                int _elementRow = elementRow;\r\n                pause.setOnFinished(event -> {\r\n                    Platform.runLater(() -> {\r\n                        iccidValue.setText(\"-\");\r\n                        imsiValue.setText(\"-\");\r\n                        mainGridPane.add(finalRoot1, _elementColumn, _elementRow);\r\n                        mainGridPane.getChildren().get(id).setVisible(false);\r\n\r\n                    });\r\n                });\r\n                pause.play();\r\n                SimVerifyMasterThread2.elementColumn++;\r\n            }\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    private void reLoadCardWidget(int id) {\r\n        try {\r\n            Scene scene = (Scene) startTestingButton.getScene();\r\n            StackPane cardWidget = (StackPane) scene.lookup(\"#cardWidget_\" + id);\r\n            Label iccidValue = (Label) cardWidget.lookup(\"#iccid_value_label\");\r\n            Label imsiValue = (Label) cardWidget.lookup(\"#imsi_value_label\");\r\n            ImageView statusImage = (ImageView) cardWidget.lookup(\"#status_image\");\r\n            Platform.runLater(() -> {\r\n                iccidValue.setText(\"-\");\r\n                imsiValue.setText(\"-\");\r\n                statusImage.setImage(questionMarkImage);\r\n                cardWidget.setStyle(\"-fx-background-color: #2F58CD; -fx-background-radius: 15;\");\r\n                mainGridPane.getChildren().get(id).setVisible(false);\r\n            });\r\n\r\n        } catch (Exception e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n\r\n    public void logOut() throws IOException {\r\n//        cancelAllThreads();\r\n        Parent logInPage = FXMLLoader.load(getClass().getResource(\"/com/mannash/javafxapplication/fxml/login-form.fxml\"));\r\n        Stage primaryStage = (Stage) startTestingButton.getScene().getWindow();\r\n        this.cardsConnectedList.getItems().clear();\r\n        primaryStage.close();\r\n        Stage primaryStage2 = new Stage();\r\n        Scene scene = new Scene(logInPage);\r\n        primaryStage2.setScene(scene);\r\n        primaryStage2.setResizable(false);\r\n        Image icon = new Image(\"/com/mannash/javafxapplication/fxml/images/airtelair2.png\");\r\n        primaryStage2.getIcons().add(icon);\r\n        primaryStage2.setTitle(\"SIM Verify!\");\r\n\r\n        primaryStage2.show();\r\n\r\n    }\r\n\r\n    public void initializeTestingThreads() {\r\n        System.out.println(\"inside the run\");\r\n        TerminalConnectService terminalConnectService = new TerminalConnectServiceImpl(this.loggerThread,this);\r\n        List<TerminalInfo> terminalInfos = terminalConnectService.fetchTerminalInfo();\r\n\r\n        System.out.println(\"TERMINAL INFOS : \" + terminalInfos.toString());\r\n        Iterator<TerminalInfo> terminalInfo = terminalInfos.iterator();\r\n        int index = 0;\r\n//        this.cardsConnectedList.setItems(FXCollections.observableArrayList());\r\n        while (terminalInfo.hasNext()) {\r\n            System.out.println(\"index : \" + index);\r\n            TerminalInfo terminal = terminalInfo.next();\r\n            String iccid = terminal.getTerminalCardIccid();\r\n            System.out.println(\"ICCID : \" + iccid);\r\n            this.terminalsConnected++;\r\n            if (iccid == null) {\r\n                updateWidgetIccidAndImsi(\"-\", \"-\", index);\r\n            }\r\n            if (iccid != null) {\r\n                cardConnectedCounter++;\r\n                int finalIndex = index;\r\n                updateWidgetIccidAndImsi(terminal.getTerminalCardIccid(), terminal.getImsi(), finalIndex);\r\n                updateWidgetStatusLabel(\"IN_PROGRESS\", finalIndex);\r\n                updateWidgetStatusImage(processingImage, finalIndex);\r\n            }\r\n            index++;\r\n        }\r\n        startTestingThreads(terminalInfos);\r\n    }\r\n\r\n    private void startTestingThreads(List<TerminalInfo> terminals) {\r\n        int numThreads = Math.min(terminals.size(), Runtime.getRuntime().availableProcessors());\r\n        ExecutorService executor = Executors.newFixedThreadPool(numThreads);\r\n//        List<Future<?>> futures = new ArrayList<>();\r\n        for (int i = 0; i < terminals.size(); i++) {\r\n            TerminalInfo terminal = terminals.get(i);\r\n            if (terminal.getTerminalCardIccid() != null) {\r\n                int terminalNumber = terminal.getTerminalNumber();\r\n                System.out.println(\"Terminal Number ~~~ : \" + (terminalNumber));\r\n                String threadName = terminal.getTerminalNumber() + \"_\" + terminal.getTerminalCardIccid();\r\n                TestingController4 controller4 = new TestingController4(threadName, terminal, this, i, this.loggerThread);\r\n                controller4ThreadList.add(controller4);\r\n                Future<?> future = executor.submit(controller4);\r\n                futureList.add(future);\r\n                initializedThreads++;\r\n            }\r\n        }\r\n        for (Future<?> future : futureList) {\r\n            try {\r\n                future.get();\r\n            } catch (InterruptedException e) {\r\n                e.printStackTrace();\r\n            } catch (ExecutionException e) {\r\n                e.printStackTrace();\r\n            }\r\n        }\r\n        executor.shutdown();\r\n        System.out.println(\"testing done\");\r\n        this.loggerThread.displayLogs(_terminal, \"Verification Completed\", -1);\r\n    }\r\n\r\n    private void onStopButtonClicked() {\r\n        stopThreads();\r\n        System.out.println(\"testing stopped\");\r\n    }\r\n\r\n    private void stopThreads() {\r\n        Thread.enumerate(threads); // Iterate over each thread and interrupt if name matches\r\n        for (Thread thread : threads) {\r\n            if (thread != null) {\r\n                if (thread.getName().equals(\"Testing thread : 0\")) {\r\n                    System.out.println(\"found!!\");\r\n                    thread.interrupt();\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    public void displayLogs(String log) {\r\n        Platform.runLater(() -> {\r\n            logTextArea.appendText(log + \"\\n\");\r\n        });\r\n    }\r\n\r\n    public void displayLogs(String from, String to, String log, int widgetId) {\r\n        displayLogs(\"[\"+(widgetId+1)+\"] \"+\" [\"+from+\" -> \"+to+\"] : \"+log);\r\n    }\r\n\r\n    public void displayLogs(String from, String log,int widgetId) {\r\n        displayLogs(\"[\"+(widgetId+1)+\"] \"+\" [\"+from+\"        ] : \"+log);\r\n    }\r\n\r\n    public synchronized void updateTesting(int id) {\r\n        finishedThreads++;\r\n        if (finishedThreads == initializedThreads) {\r\n            setDoneButton();\r\n            setExportButton();\r\n            loggerThread.displayLogs(_terminal, \"Verification Completed\", -1);\r\n            System.out.println(\"testing done\");\r\n        }\r\n    }\r\n\r\n    @FXML\r\n    public void onExportButtonPress() {\r\n        String csvFilePath = \"..\\\\reports\\\\\";\r\n        LocalDateTime currentDateTime = LocalDateTime.now();\r\n        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyyMMdd_HHmmss\");\r\n        String dateTimeString = currentDateTime.format(formatter);\r\n        String csvFileName  = \"TestingResult_\" + dateTimeString + \".csv\";\r\n        String fileName = csvFilePath + \"TestingResult_\" + dateTimeString + \".csv\";\r\n        File csvFile = new File(fileName);\r\n\r\n        File path = new File(csvFilePath);\r\n        if (!path.exists()) {\r\n            path.mkdir();\r\n        }\r\n        if (csvFile.exists()) {\r\n            this.headersPrinted = true;\r\n        }\r\n        if (!csvFile.exists()) {\r\n            try {\r\n                csvFile.createNewFile();\r\n                this.headersPrinted = false;\r\n            } catch (IOException e) {\r\n                e.printStackTrace();\r\n            }\r\n        }\r\n        try (FileWriter writer = new FileWriter(csvFile, true);\r\n             CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)) {\r\n            if (!this.headersPrinted) {\r\n                csvPrinter.printRecord(\r\n                        \"Terminal Number\",\r\n                        \"Date\",\r\n                        \"Time\",\r\n                        \"ICCID\",\r\n                        \"IMSI\",\r\n                        \"SIM Heartbeat\",\r\n                        \"File System Verification\",\r\n                        \"Profile Testing\",\r\n                        \"Read/Write\",\r\n                        \"Card status\"\r\n                );\r\n                this.headersPrinted = true;\r\n            }\r\n            synchronized (csvLock) {\r\n                for (Map.Entry<Integer, ExportTestingResultPojo> result : cardTestingResultMap.entrySet()) {\r\n                    Integer key = result.getKey();\r\n                    ExportTestingResultPojo value = result.getValue();\r\n                    csvPrinter.printRecord(\r\n                            value.getTerminalNumber(),\r\n                            value.getDateOfTesting(),\r\n                            value.getTimeOfTesting(),\r\n                            value.getTerminalICCID(),\r\n                            value.getTerminalIMSI(),\r\n                            value.getSIMHeartbeat(),\r\n                            value.getFileSystemVerification(),\r\n                            value.getProfileTesting(),\r\n                            value.getReadWrite(),\r\n                            value.getCardStatus()\r\n                    );\r\n                }\r\n                csvPrinter.flush();\r\n            }\r\n\r\n            exportIcon.setVisible(false);\r\n            exportMessage.setText(\"Result Exported successfully to\\n\" +csvFileName+ \" in reports folder\");\r\n            exportMessage.setVisible(true);\r\n        } catch (Exception ex) {\r\n            ex.printStackTrace();\r\n        }\r\n    }\r\n\r\n    public void testMethod(){\r\n        System.out.println(\"this is test\");\r\n    }\r\n\r\n\r\n}\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java b/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java
+--- a/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java	(revision ba870f13722fc1b222ea094df1e362ae5ba6435c)
++++ b/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java	(date 1679550557851)
+@@ -133,6 +133,7 @@
+ 
+     ExportTestingResultPojo exportTestingResultPojo = new ExportTestingResultPojo();
+     private Object csvLock = new Object();
++    ExecutorService executor;
+ 
+ 
+ 
+@@ -316,7 +317,7 @@
+             }
+ //          this.loggerThread.interrupt();
+             setDoneButton();
+-            cardsConnectedList.getItems().clear();
++//            cardsConnectedList.getItems().clear();
+         } else if (startTestingButton.getImage().getUrl().contains("done")) {
+ 
+             reLoadTestingWindowData();
+@@ -614,7 +615,8 @@
+ 
+     private void startTestingThreads(List<TerminalInfo> terminals) {
+         int numThreads = Math.min(terminals.size(), Runtime.getRuntime().availableProcessors());
+-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
++//        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
++        this.executor = Executors.newFixedThreadPool(numThreads);
+ //        List<Future<?>> futures = new ArrayList<>();
+         for (int i = 0; i < terminals.size(); i++) {
+             TerminalInfo terminal = terminals.get(i);
+@@ -644,18 +646,27 @@
+     }
+ 
+     private void onStopButtonClicked() {
+-        stopThreads();
+-        System.out.println("testing stopped");
++//        stopThreads();
++//        System.out.println("testing stopped");
++        for (Future<?> future : futureList) {
++//            future.cancel(true);
++            Thread t = (Thread) future;
++            t.stop();
++        }
++        // Shutdown the executor service
++        executor.shutdownNow();
++
+     }
+ 
+     private void stopThreads() {
+-        Thread.enumerate(threads); // Iterate over each thread and interrupt if name matches
++//        Thread.enumerate(threads); // Iterate over each thread and interrupt if name matches
+         for (Thread thread : threads) {
+             if (thread != null) {
+-                if (thread.getName().equals("Testing thread : 0")) {
+-                    System.out.println("found!!");
+-                    thread.interrupt();
+-                }
++                thread.stop();
++//                if (thread.getName().equals("Testing thread : 0")) {
++//                    System.out.println("found!!");
++//                    thread.interrupt();
++//                }
+             }
+         }
+     }
+Index: .idea/libraries/commons_csv_1_10_0.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"libraryTable\">\r\n  <library name=\"commons-csv-1.10.0\">\r\n    <CLASSES>\r\n      <root url=\"jar://$PROJECT_DIR$/../SIMVerify/lib/commons-csv-1.10.0.jar!/\" />\r\n    </CLASSES>\r\n    <JAVADOC />\r\n    <SOURCES />\r\n  </library>\r\n</component>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/libraries/commons_csv_1_10_0.xml b/.idea/libraries/commons_csv_1_10_0.xml
+--- a/.idea/libraries/commons_csv_1_10_0.xml	(revision ba870f13722fc1b222ea094df1e362ae5ba6435c)
++++ b/.idea/libraries/commons_csv_1_10_0.xml	(date 1679489241003)
+@@ -1,7 +1,7 @@
+ <component name="libraryTable">
+   <library name="commons-csv-1.10.0">
+     <CLASSES>
+-      <root url="jar://$PROJECT_DIR$/../SIMVerify/lib/commons-csv-1.10.0.jar!/" />
++      <root url="jar://D:/Work/R&amp;D/SIMVerify/bin/commons-csv-1.10.0.jar!/" />
+     </CLASSES>
+     <JAVADOC />
+     <SOURCES />
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ArtifactsWorkspaceSettings\">\r\n    <artifacts-to-build>\r\n      <artifact name=\"SimVerify_multicards:jar\" />\r\n    </artifacts-to-build>\r\n  </component>\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"08806b69-6f2c-4550-a435-1081ebc30207\" name=\"Changes\" comment=\"\">\r\n      <change afterPath=\"$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n        <option value=\"FxmlFile\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n    <option name=\"ROOT_SYNC\" value=\"DONT_SYNC\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2MpFSqgfrkTYaZocy8lyNo9lcOl\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"ASKED_SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"last_opened_file_path\": \"D:/work/SIMCardValidationProject/SIMVerify/lib\",\r\n    \"project.structure.last.edited\": \"Artifacts\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.26666668\",\r\n    \"settings.editor.selected.configurable\": \"reference.settings.project.maven.repository.indices\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\SimVerify_multicards\\src\\main\\resources\\com\\mannash\\javafxapplication\\fxml\\images\" />\r\n      <recent name=\"D:\\SimVerify_multicards\\src\\main\\java\\com\\mannash\\simcardvalidation\" />\r\n      <recent name=\"D:\\Work\\R&amp;D\\Project_3\\SimVerify_multicards\\src\\main\\resources\\com\\mannash\\javafxapplication\\fxml\\images\" />\r\n      <recent name=\"D:\\Work\\R&amp;D\\Project_3\\SimVerify_multicards\\src\\main\\resources\\com\\mannash\\javafxapplication\\fxml\" />\r\n      <recent name=\"D:\\Work\\R&amp;D\\Project_3\\SimVerify_multicards\\src\\main\\java\\com\\mannash\\simcardvalidation\\threads\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"com.mannash.simcardvalidation\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration>C:\\Users\\Lenovo\\AppData\\Roaming\\Subversion</configuration>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"08806b69-6f2c-4550-a435-1081ebc30207\" name=\"Changes\" comment=\"\" />\r\n      <created>1678456619627</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1678456619627</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Master thread implemented\">\r\n      <created>1678644270152</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1678644270152</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Master thread implemented\">\r\n      <created>1678644318989</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1678644318989</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"vcs\">\r\n      <created>1679424300717</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679424300717</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"vcs\">\r\n      <created>1679459240957</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679459240957</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"5\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <ignored-roots>\r\n      <path value=\"$PROJECT_DIR$/..\" />\r\n      <path value=\"$PROJECT_DIR$/../\" />\r\n      <path value=\"$PROJECT_DIR$\" />\r\n    </ignored-roots>\r\n    <MESSAGE value=\"Master thread implemented\" />\r\n    <MESSAGE value=\"Updated project till the client-side implementation without the cancelling all threads logic\" />\r\n    <MESSAGE value=\"vcs\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"vcs\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision ba870f13722fc1b222ea094df1e362ae5ba6435c)
++++ b/.idea/workspace.xml	(date 1679550832772)
+@@ -9,10 +9,12 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" afterDir="false" />
++    <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="Logger fixed in terminal connect serviceImpl">
++      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22-03-2023_12_41__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22-03-2023_12_41__Changes_.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyLoggerThread.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -29,6 +31,7 @@
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="RESET_MODE" value="MIXED" />
+     <option name="ROOT_SYNC" value="DONT_SYNC" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+@@ -49,8 +52,8 @@
+     "last_opened_file_path": "D:/work/SIMCardValidationProject/SIMVerify/lib",
+     "project.structure.last.edited": "Artifacts",
+     "project.structure.proportion": "0.15",
+-    "project.structure.side.proportion": "0.26666668",
+-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
++    "project.structure.side.proportion": "0.41724136",
++    "settings.editor.selected.configurable": "preferences.lookFeel"
+   }
+ }]]></component>
+   <component name="RecentsManager">
+@@ -105,7 +108,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1679459240957</updated>
+     </task>
+-    <option name="localTasksCounter" value="5" />
++    <task id="LOCAL-00005" summary="Logger fixed in terminal connect serviceImpl">
++      <created>1679489257017</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1679489257017</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -113,7 +123,34 @@
+       <map>
+         <entry key="MAIN">
+           <value>
+-            <State />
++            <State>
++              <option name="FILTERS">
++                <map>
++                  <entry key="branch">
++                    <value>
++                      <list>
++                        <option value="master" />
++                      </list>
++                    </value>
++                  </entry>
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
++    <option name="RECENT_FILTERS">
++      <map>
++        <entry key="Branch">
++          <value>
++            <list>
++              <RecentGroup>
++                <option name="FILTER_VALUES">
++                  <option value="master" />
++                </option>
++              </RecentGroup>
++            </list>
+           </value>
+         </entry>
+       </map>
+@@ -128,6 +165,7 @@
+     <MESSAGE value="Master thread implemented" />
+     <MESSAGE value="Updated project till the client-side implementation without the cancelling all threads logic" />
+     <MESSAGE value="vcs" />
+-    <option name="LAST_COMMIT_MESSAGE" value="vcs" />
++    <MESSAGE value="Logger fixed in terminal connect serviceImpl" />
++    <option name="LAST_COMMIT_MESSAGE" value="Logger fixed in terminal connect serviceImpl" />
+   </component>
+ </project>
+\ No newline at end of file
