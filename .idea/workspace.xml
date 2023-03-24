@@ -9,7 +9,53 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="Authentication and config API implementation of client side" />
+    <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="Master thread implemented">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/SimVerify_multicards.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/usb_api_1_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/CheckUpdate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyPopUpWindowController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyTransferDataToServerThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/ThreadController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/pojo/SimVerifyPopUpWindowDataPojo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/TestingInProgressGif.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/button_testing-in-progress.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/SimVerify_multicards_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/SimVerify_multicards_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/guava_cache_19_0_0.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22-03-2023_12_41_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_22-03-2023_12_41__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_12_44_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_12_44_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_1_47_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_1_47_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_6_12_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_22_2023_6_12_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_23_2023_11_35_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_3_23_2023_11_35_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SECURITY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/pojo/ExportTestingResultPojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/pojo/ExportTestingResultPojo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TerminalConnectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TerminalConnectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TrakmeServerCommunicationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TrakmeServerCommunicationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/GridElement.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/GridElement.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/MyGrid.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/MyGrid.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/TestingStatusWindow.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/application.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/application.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/cancel Image.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/done.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/greenLight2.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/green_check.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/images/ok.jpg" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,41 +69,41 @@
       </list>
     </option>
   </component>
-  <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/master" />
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="MIXED" />
-    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyMasterThread2.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/SimVerifyPopUpWindowController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/pojo/ExportTestingResultPojo.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/service/TerminalConnectServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/resources/com/mannash/javafxapplication/fxml/MultiCardTesting.fxml" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2MpFSqgfrkTYaZocy8lyNo9lcOl" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "D:/Work/R&D/SIMVerify/lib/New folder/json-20090211.jar",
-    "project.structure.last.edited": "Project",
+    "last_opened_file_path": "D:/work/SIMCardValidationProject/SIMVerify/lib",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.39425287",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "settings.editor.splitter.proportion": "0.24159022"
+    "project.structure.side.proportion": "0.26666668",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\SimVerify_multicards\src\main\resources\com\mannash\javafxapplication\fxml\images" />
-      <recent name="D:\SimVerify_multicards\src\main\java\com\mannash\simcardvalidation" />
+      <recent name="D:\work\SimVerify_multicards\src\main\resources\com\mannash\javafxapplication\fxml\images" />
+      <recent name="D:\work\SimVerify_multicards\src\main\java\com\mannash\simcardvalidation" />
       <recent name="D:\Work\R&amp;D\Project_3\SimVerify_multicards\src\main\resources\com\mannash\javafxapplication\fxml\images" />
       <recent name="D:\Work\R&amp;D\Project_3\SimVerify_multicards\src\main\resources\com\mannash\javafxapplication\fxml" />
       <recent name="D:\Work\R&amp;D\Project_3\SimVerify_multicards\src\main\java\com\mannash\simcardvalidation\threads" />
@@ -66,10 +112,62 @@
       <recent name="com.mannash.simcardvalidation" />
     </key>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="SvnConfiguration">
-    <configuration>C:\Users\Lenovo\AppData\Roaming\Subversion</configuration>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn compile" />
+      <command value="mvn clean" />
+      <command value="mvn install" />
+    </option>
   </component>
+  <component name="RunManager" selected="Application.ReadVersionFromPom">
+    <configuration name="ReadVersionFromPom" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.mannash.simcardvalidation.ReadVersionFromPom" />
+      <module name="SimVerify_multicards" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mannash.simcardvalidation.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SerialNumber" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.mannash.simcardvalidation.SerialNumber" />
+      <module name="SimVerify_multicards" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mannash.simcardvalidation.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="USBInstanceId" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.mannash.simcardvalidation.USBInstanceId" />
+      <module name="SimVerify_multicards" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mannash.simcardvalidation.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ReadVersionFromPom" />
+        <item itemvalue="Application.SerialNumber" />
+        <item itemvalue="Application.USBInstanceId" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="" />
@@ -92,35 +190,7 @@
       <option name="project" value="LOCAL" />
       <updated>1678644318989</updated>
     </task>
-    <task id="LOCAL-00003" summary="vcs">
-      <created>1679424300717</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1679424300717</updated>
-    </task>
-    <task id="LOCAL-00004" summary="vcs">
-      <created>1679459240957</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1679459240957</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Removed comments of logger thead">
-      <created>1679551777434</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1679551777434</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Authentication and config API implementation of client side">
-      <created>1679663711714</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1679663711714</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -128,54 +198,14 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="master" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list>
-              <RecentGroup>
-                <option name="FILTER_VALUES">
-                  <option value="master" />
-                </option>
-              </RecentGroup>
-            </list>
+            <State />
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <ignored-roots>
-      <path value="$PROJECT_DIR$/.." />
-      <path value="$PROJECT_DIR$/../" />
-      <path value="$PROJECT_DIR$" />
-    </ignored-roots>
     <MESSAGE value="Master thread implemented" />
-    <MESSAGE value="Updated project till the client-side implementation without the cancelling all threads logic" />
-    <MESSAGE value="vcs" />
-    <MESSAGE value="Removed comments of logger thead" />
-    <MESSAGE value="Authentication and config API implementation of client side" />
-    <option name="LAST_COMMIT_MESSAGE" value="Authentication and config API implementation of client side" />
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
+    <option name="LAST_COMMIT_MESSAGE" value="Master thread implemented" />
   </component>
 </project>

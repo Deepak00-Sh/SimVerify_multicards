@@ -106,60 +106,61 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 					String responseString = EntityUtils.toString((HttpEntity) response.getEntity());
 					if (response.getStatusLine().getStatusCode() != 200) {
 						System.out.println("inside != 200");
-						readCredentialsFromLocal(userName,password);
-						if (responseString != null) {
-							if (response.getStatusLine().getStatusCode() == 401) {
-								responseAuthenticationPojo.setMessage("Invalid username/password");
-								// this.logger.error("Invalid Username & Password , Status code : " + 401);
-								responseAuthenticationPojo.setStatusCode(401);
+						if (readCredentialsFromLocal(userName, password)) {
+							return responseAuthenticationPojo;
+						}
+							if (responseString != null) {
+								if (response.getStatusLine().getStatusCode() == 401) {
+									responseAuthenticationPojo.setMessage("Invalid username/password");
+									// this.logger.error("Invalid Username & Password , Status code : " + 401);
+									responseAuthenticationPojo.setStatusCode(401);
+								} else {
+									responseAuthenticationPojo.setMessage("Unable to authenticate user");
+									// this.logger.debug("Unable to authenticate user with Status code : " + response.getStatusLine().getStatusCode());
+									responseAuthenticationPojo.setStatusCode(response.getStatusLine().getStatusCode());
+								}
 							} else {
 								responseAuthenticationPojo.setMessage("Unable to authenticate user");
-								// this.logger.debug("Unable to authenticate user with Status code : " + response.getStatusLine().getStatusCode());
-								responseAuthenticationPojo.setStatusCode(response.getStatusLine().getStatusCode());
+								responseAuthenticationPojo.setStatusCode(500);
+								// this.logger.debug("Unable to authenticate user with Status code : " + 500);
 							}
-						} else {
-							responseAuthenticationPojo.setMessage("Unable to authenticate user");
-							responseAuthenticationPojo.setStatusCode(500);
-							// this.logger.debug("Unable to authenticate user with Status code : " + 500);
-						}
-					}
-
-					else {
-						responseAuthenticationPojo.setStatusCode(200);
-						System.out.println("SERVER : user authenticate successfully with user name : "+userName);
-
-						try (FileWriter writer = new FileWriter(file);
-							 BufferedWriter bw = new BufferedWriter(writer)) {
-							bw.write("userId="+userName);
-							bw.newLine();
-							bw.write("password="+password);
-							bw.newLine();
-							// add more user IDs and passwords as required
-						} catch (IOException e) {
-							e.printStackTrace();
 						}
 
-						// this.logger.info("TrakmeServer authenticated successfully with user" + userName);
-						// System.out.println("Status Code : " + 200);
+					else{
+							responseAuthenticationPojo.setStatusCode(200);
+							System.out.println("SERVER : user authenticate successfully with user name : " + userName);
+
+							try (FileWriter writer = new FileWriter(file);
+								 BufferedWriter bw = new BufferedWriter(writer)) {
+								bw.write("userId=" + userName);
+								bw.newLine();
+								bw.write("password=" + password);
+								bw.newLine();
+								// add more user IDs and passwords as required
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+
+							// this.logger.info("TrakmeServer authenticated successfully with user" + userName);
+							// System.out.println("Status Code : " + 200);
+						}
+					} else {
+						responseAuthenticationPojo.setMessage("Unable to authenticate user");
+						responseAuthenticationPojo.setStatusCode(500);
+						// this.logger.debug("Unable to authenticate user, response is null");
 					}
-				} else {
-					responseAuthenticationPojo.setMessage("Unable to authenticate user");
-					responseAuthenticationPojo.setStatusCode(500);
-					// this.logger.debug("Unable to authenticate user, response is null");
-				}
+
 			} catch (Exception e) {
+				System.out.println("INSIDE CATCH");
 				readCredentialsFromLocal(userName,password);
-//				e.printStackTrace();
-//				responseAuthenticationPojo.setMessage("Unable to authenticate user");
-//				responseAuthenticationPojo.setStatusCode(500);
-				// this.logger.info("Unable to authentcate user");
+
 			}
 			return responseAuthenticationPojo;
 		}
 
 	}
 
-	public void readCredentialsFromLocal(String userName, String password){
+	public Boolean readCredentialsFromLocal(String userName, String password){
 		String userId=null;
 		String pass = null;
 
@@ -184,8 +185,11 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 			System.out.println("inside the if condition");
 			responseAuthenticationPojo.setStatusCode(200);
 			System.out.println("PROPERTY FILE : user authenticate successfully with user name : "+userName);
+			return true;
 		}else {
+			responseAuthenticationPojo.setStatusCode(404);
 			responseAuthenticationPojo.setMessage("Invalid username or password");
+			return false;
 		}
 	}
 
@@ -498,6 +502,37 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 	}
 
+	public int sendReportsToServer(String userName, List cardTestingPojos){
+		CloseableHttpClient client = HttpClients.createDefault();
+		try {
+//			String completeUrl = "http://localhost:8080/url?usrId="
+//					+ userName + "&woId=" + woID + "&iccid=" + iccid + "&counter=" + counter + "&cardStageId="
+//					+ cardStageId;
+
+			String completeUrl = "url";
+
+			// this.logger.debug("Calling  Server : " + completeUrl);
+
+			HttpPost post = new HttpPost(completeUrl);
+
+			Gson gson = new Gson();
+			CloseableHttpResponse response = client.execute(post);
+			String responseString = EntityUtils.toString(response.getEntity());
+
+			return response.getStatusLine().getStatusCode();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public ResponseTestingConfig getTestingConfig(String iccid, String woId, String userName) {
 		CloseableHttpClient client = HttpClients.createDefault();
 		ResponseTestingConfig responseTestingConfig = new ResponseTestingConfig();
@@ -522,10 +557,10 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 					.setFileContentConfig(responseFieldTestingConfigPojo.getFileContentConfig());
 			responseTestingConfig
 					.setFileSystemConfig(responseFieldTestingConfigPojo.getFileSystemConfig());
-			responseTestingConfig
-					.setFileVerificationSystemConfig(responseFieldTestingConfigPojo.getFileVerificationSystemConfig());
-			responseTestingConfig
-					.setFileVerificationContentConfig(responseFieldTestingConfigPojo.getFileVerificationContentConfig());
+//			responseTestingConfig
+//					.setFileVerificationSystemConfig(responseFieldTestingConfigPojo.getFileVerificationSystemConfig());
+//			responseTestingConfig
+//					.setFileVerificationContentConfig(responseFieldTestingConfigPojo.getFileVerificationContentConfig());
 			responseTestingConfig
 					.setApduList(responseFieldTestingConfigPojo.getApduList());
 			responseTestingConfig
@@ -623,7 +658,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 			responseStressTestingConfig.setApduList(responseFieldTestingProfileConfigPojo.getStressTestingApdus());
 			responseStressTestingConfig.setLoopCount(responseFieldTestingProfileConfigPojo.getStressTestingLoopCount());
 			responseStressTestingConfig.setStartCounter(1);
-			
+
 			return responseStressTestingConfig;
 
 		} catch (Exception e) {

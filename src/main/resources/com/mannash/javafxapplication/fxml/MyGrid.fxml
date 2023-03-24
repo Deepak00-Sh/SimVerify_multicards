@@ -47,7 +47,10 @@
                             <Insets bottom="5.0" left="6.0" top="10.0" />
                         </HBox.margin>
                     </ImageView>
-                    <MenuButton id="logOut" fx:id="logOut" mnemonicParsing="false" text="Log Out">
+                    <MenuButton id="logOut" fx:id="logOut" mnemonicParsing="false" text="Profile">
+                        <items>
+                            <MenuItem id="updateButton" fx:id="updateButton" mnemonicParsing="false" onAction="#checkUpdate" text="Update App" />
+                        </items>
                         <items>
                             <MenuItem id="logOutButton" fx:id="logOutButton" mnemonicParsing="false" onAction="#logOut" text="Log Out" />
                         </items>

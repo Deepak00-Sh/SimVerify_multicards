@@ -4,10 +4,9 @@ import com.mannash.simcardvalidation.card.FileSystemVerification;
 import com.mannash.simcardvalidation.card.ProfileTest3G;
 import com.mannash.simcardvalidation.card.StressTest;
 import com.mannash.simcardvalidation.pojo.ExportTestingResultPojo;
+import com.mannash.simcardvalidation.pojo.SimVerifyPopUpWindowDataPojo;
 import com.mannash.simcardvalidation.pojo.TerminalInfo;
 import com.mannash.simcardvalidation.service.LoggerService;
-import com.mannash.simcardvalidation.service.TerminalConnectService;
-import com.mannash.simcardvalidation.service.TerminalConnectServiceImpl;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -24,12 +23,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,12 +44,14 @@ public class TestingController4 implements Initializable, Runnable {
     SimVerifyLoggerThread loggerThread;
     private volatile boolean stopRequested = true;
 
+
     public TestingController4(String threadName, TerminalInfo terminal1, SimVerifyMasterThread2 thread, int index, SimVerifyLoggerThread loggerThread) {
         simVerifyMasterThread2 = thread;
         this.threadName = threadName;
         this.terminal = terminal1;
         this.widgetId = index;
         this.loggerThread = loggerThread;
+
     }
 
     @FXML
@@ -258,317 +257,336 @@ public class TestingController4 implements Initializable, Runnable {
 
     public void run() {
 
-        if (Thread.currentThread().isInterrupted()) {
-            return;
-        }
-        TerminalInfo localTerminal = terminal;
 
-        System.out.println("WIDGET ID outside task : " + this.widgetId);
-        task1 = new Task<Boolean>() {
-            @Override
-            protected Boolean call() throws Exception {
-                //connect to terminal
-                System.out.println("[" + widgetId + "] " + "Inside the task 1");
+//        if (Thread.currentThread().isInterrupted()) {
+//            return;
+//        }
+        try {
+            TerminalInfo localTerminal = terminal;
+
+
+            System.out.println("WIDGET ID outside task : " + this.widgetId);
+            task1 = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    //connect to terminal
+                    System.out.println("[" + widgetId + "] " + "Inside the task 1");
 //                    boolean b1 = initializeTerminal();
-                CardTerminal cardTerminal = localTerminal.getCt();
-                if (cardTerminal.isCardPresent()) {
-                    loggerThread.displayLogs(_terminal, "Device connected", widgetId);
-                    try {
-                        Card card = cardTerminal.connect("T=0");
-                        setCard(card);
-                        cardChannel = card.getBasicChannel();
-                    } catch (CardException e) {
-                        e.printStackTrace();
+                    CardTerminal cardTerminal = localTerminal.getCt();
+                    if (cardTerminal.isCardPresent()) {
+                        loggerThread.displayLogs(_terminal, "Device connected", widgetId);
+                        try {
+                            Card card = cardTerminal.connect("T=0");
+                            setCard(card);
+                            cardChannel = card.getBasicChannel();
+                        } catch (CardException e) {
+                            e.printStackTrace();
+                            setCardConnected(false);
+                            System.out.println("Terminal: " + cardTerminal.getName() + " Card Not Present");
+                            loggerThread.displayLogs(_terminal, "Card is not present", widgetId);
+
+                            Thread.currentThread().interrupt();
+                            return false;
+                        }
+                        System.out.println("Card is present on : " + cardTerminal.getName());
+                        loggerThread.displayLogs(_terminal, "Card connected", widgetId);
+
+                        try {
+                            AID = getAID(cardTerminal);
+                        } catch (Exception e) {
+                            // this.logger.error("Exception in getAID");
+                        }
+                        loggerThread.displayLogs(_terminal, _card, "Reading ICCID", widgetId);
+                        String iccid = getICCID(cardTerminal);
+                        terminalICCID = iccid;
+                        System.out.println("WIDGET ID inside task : " + widgetId);
+                        terminalNumber = widgetId + 1;
+                        loggerThread.displayLogs(_terminal, "ICCID Value " + iccid, widgetId);
+                        loggerThread.displayLogs(_terminal, _card, "Reading IMSI", widgetId);
+                        String imsi = getIMSI(cardTerminal);
+                        terminalIMSI = imsi;
+                        loggerThread.displayLogs(_terminal, "IMSI Value " + imsi, widgetId);
+
+
+                        //setting date and time to pojo
+
+
+                        if (iccid != null && !"".equalsIgnoreCase(iccid)) {
+                            localTerminal.setTerminalCardIccid(iccid);
+                            localTerminal.setImsi(imsi);
+                            // terminalInfo.setTerminalNumber(Integer.parseInt(cardTerminal.getName()));
+                        } else {
+
+                            System.out.println("Terminal: " + cardTerminal.getName() + " Failed to fetch Card information");
+                            loggerThread.displayLogs(_terminal, "Card is not responding", widgetId);
+                            return false;
+                        }
+                        setCardConnected(true);
+                    } else {
                         setCardConnected(false);
                         System.out.println("Terminal: " + cardTerminal.getName() + " Card Not Present");
                         loggerThread.displayLogs(_terminal, "Card is not present", widgetId);
-
-                        Thread.currentThread().interrupt();
                         return false;
                     }
-                    System.out.println("Card is present on : " + cardTerminal.getName());
-                    loggerThread.displayLogs(_terminal, "Card connected", widgetId);
+                    return true;
 
-                    try {
-                        AID = getAID(cardTerminal);
-                    } catch (Exception e) {
-                        // this.logger.error("Exception in getAID");
-                    }
-                    loggerThread.displayLogs(_terminal, _card, "Reading ICCID", widgetId);
-                    String iccid = getICCID(cardTerminal);
-                    terminalICCID = iccid;
-                    System.out.println("WIDGET ID inside task : " + widgetId);
-                    terminalNumber = widgetId + 1;
-                    loggerThread.displayLogs(_terminal, "ICCID Value " + iccid, widgetId);
-                    loggerThread.displayLogs(_terminal, _card, "Reading IMSI", widgetId);
-                    String imsi = getIMSI(cardTerminal);
-                    terminalIMSI = imsi;
-                    loggerThread.displayLogs(_terminal, "IMSI Value " + imsi, widgetId);
-
-
-                    //setting date and time to pojo
-
-
-                    if (iccid != null && !"".equalsIgnoreCase(iccid)) {
-                        localTerminal.setTerminalCardIccid(iccid);
-                        localTerminal.setImsi(imsi);
-                        // terminalInfo.setTerminalNumber(Integer.parseInt(cardTerminal.getName()));
-                    } else {
-
-                        System.out.println("Terminal: " + cardTerminal.getName() + " Failed to fetch Card information");
-                        loggerThread.displayLogs(_terminal, "Card is not responding", widgetId);
-                        return false;
-                    }
-                    setCardConnected(true);
-                } else {
-                    setCardConnected(false);
-                    System.out.println("Terminal: " + cardTerminal.getName() + " Card Not Present");
-                    loggerThread.displayLogs(_terminal, "Card is not present", widgetId);
-                    return false;
                 }
-                return true;
-
-            }
-        };
-        this.thread1 = new Thread(task1);
-        this.threadMap.put("t1", this.thread1);
-        thread1.start();
-
-        task2 = new Task<Boolean>() {
-
-            @Override
-            protected Boolean call() {
-                loggerThread.displayLogs(_terminal, _card, "Starting File System Verification", widgetId);
-                System.out.println("Inside the task 2");
-                boolean b2 = fileSystemVerification();
-                setFileSystemVerification(b2);
-                System.out.println("AFTER FILE VERIFICATION!!");
-                return b2;
-            }
+            };
+            this.thread1 = new Thread(task1);
+            this.threadMap.put("t1", this.thread1);
+            this.thread1.setName(widgetId + "_task1Thread");
+            ThreadController.addThread(thread1);
+            thread1.start();
 
 
-        };
+            task2 = new Task<Boolean>() {
 
-        task3 = new Task<Boolean>() {
-            @Override
-            protected Boolean call() {
-                //connect to terminal
-                System.out.println("Inside the task 3");
-                loggerThread.displayLogs(_terminal, _card, "Starting Profile Verification", widgetId);
-                boolean b3 = profileValidation();
-                // System.out.println("profile test status : "+b3);
-                setProfileTesting(b3);
-
-                System.out.println("AFTER PROFILE VERIFICATION!!");
-                return b3;
-
-            }
-        };
-
-        task4 = new Task<Boolean>() {
-            @Override
-            protected Boolean call() throws InterruptedException {
-                //connect to terminal
-                System.out.println("Inside the task 4");
-                System.out.println("widgetId : " + widgetId);
-                loggerThread.displayLogs(_terminal, _card, "Starting Read/Write Test", widgetId);
-                boolean b4 = readWriteTest();
-
-                setReadWriteTesting(b4);
-
-                System.out.println("AFTER STRESS TESTING");
-                return b4;
-            }
-        };
-
-        task5 = new Task<Boolean>() {
-            @Override
-            protected Boolean call() {
-                //connect to terminal
-                System.out.println("Inside the task 5");
-                boolean b5 = resultCompilation();
-                setResultCompilation(b5);
-                return b5;
-            }
-        };
-
-        Platform.runLater(() -> {
-            task1.setOnSucceeded(event1 -> {
-                Boolean result = task1.getValue();
-                System.out.println("result of task 1 : " + result);
-                Platform.runLater(() -> {
-                    if (result) {
-
-
-                    } else {
-
-                        simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
-                        simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "SIM Heartbeat failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "Skipping File System Verification", widgetId);
-                        loggerThread.displayLogs(_terminal, "Skipping Profile Verification", widgetId);
-                        loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
-                    }
-
-                });
-                if (result) {
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
-                    this.testingResultPojo.setDateOfTesting(LocalDate.now().format(dateFormatter));
-                    this.testingResultPojo.setTimeOfTesting(LocalTime.now().format(timeFormatter));
-                    this.testingResultPojo.setTerminalNumber(terminalNumber);
-                    this.testingResultPojo.setTerminalICCID(terminalICCID);
-                    this.testingResultPojo.setTerminalIMSI(terminalIMSI);
-                    this.testingResultPojo.setSIMHeartbeat("OK");
-                    this.thread2 = new Thread(task2);
-                    this.threadMap.put("t2", this.thread2);
-                    this.thread2.start();
-                    this.thread1.stop();
-                } else {
-                    this.testingResultPojo.setFileSystemVerification("NOT OK");
-                    this.testingResultPojo.setProfileTesting("NOT OK");
-                    this.testingResultPojo.setReadWrite("NOT OK");
-                    this.testingResultPojo.setCardStatus("FAULTY");
-                    task2.cancel();
-                    task3.cancel();
-                    task4.cancel();
-                    task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
-                    simVerifyMasterThread2.updateTesting(widgetId);
-
-                    return;
-                }
-            });
-            task2.setOnSucceeded(event2 -> {
-                Boolean result = task2.getValue();
-                Platform.runLater(() -> {
-                    if (result) {
-                        loggerThread.displayLogs(_terminal, _card, "File Verification done", widgetId);
-                    } else {
-
-                        simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
-                        simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "File Verification failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "Skipping Profile Verification", widgetId);
-                        loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
-
-                    }
-                });
-
-                if (result) {
-                    this.testingResultPojo.setFileSystemVerification("OK");
-                    this.thread3 = new Thread(task3);
-                    this.threadMap.put("t3", this.thread3);
-                    this.thread3.start();
-                    this.thread2.stop();
-
-                } else {
-                    this.testingResultPojo.setFileSystemVerification("NOT OK");
-                    this.testingResultPojo.setProfileTesting("NOT OK");
-                    this.testingResultPojo.setReadWrite("NOT OK");
-                    this.testingResultPojo.setCardStatus("FAULTY");
-                    task3.cancel();
-                    task4.cancel();
-                    task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
-                    simVerifyMasterThread2.updateTesting(widgetId);
-                    return;
+                @Override
+                protected Boolean call() {
+                    loggerThread.displayLogs(_terminal, _card, "Starting File System Verification", widgetId);
+                    System.out.println("Inside the task 2");
+                    boolean b2 = fileSystemVerification();
+                    setFileSystemVerification(b2);
+                    System.out.println("AFTER FILE VERIFICATION!!");
+                    return b2;
                 }
 
 
-            });
+            };
 
-            task3.setOnSucceeded(event3 -> {
-                Boolean result = task3.getValue();
+            task3 = new Task<Boolean>() {
+                @Override
+                protected Boolean call() {
+                    //connect to terminal
+                    System.out.println("Inside the task 3");
+                    loggerThread.displayLogs(_terminal, _card, "Starting Profile Verification", widgetId);
+                    boolean b3 = profileValidation();
+                    // System.out.println("profile test status : "+b3);
+                    setProfileTesting(b3);
 
-                if (result) {
-                    loggerThread.displayLogs(_terminal, "Profile Verification done", widgetId);
-                } else {
+                    System.out.println("AFTER PROFILE VERIFICATION!!");
+                    return b3;
+
+                }
+            };
+
+            task4 = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws InterruptedException {
+                    //connect to terminal
+                    System.out.println("Inside the task 4");
+                    System.out.println("widgetId : " + widgetId);
+                    loggerThread.displayLogs(_terminal, _card, "Starting Read/Write Test", widgetId);
+                    boolean b4 = readWriteTest();
+
+                    setReadWriteTesting(b4);
+
+                    System.out.println("AFTER STRESS TESTING");
+                    return b4;
+                }
+            };
+
+            task5 = new Task<Boolean>() {
+                @Override
+                protected Boolean call() {
+                    //connect to terminal
+                    System.out.println("Inside the task 5");
+                    boolean b5 = resultCompilation();
+                    setResultCompilation(b5);
+                    return b5;
+                }
+            };
+
+            Platform.runLater(() -> {
+                task1.setOnSucceeded(event1 -> {
+                    Boolean result = task1.getValue();
+                    System.out.println("result of task 1 : " + result);
                     Platform.runLater(() -> {
-                        simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
-                        simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "Profile Verification failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
+                        if (result) {
+
+                        } else {
+
+                            simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
+                            simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "SIM Heartbeat failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "Skipping File System Verification", widgetId);
+                            loggerThread.displayLogs(_terminal, "Skipping Profile Verification", widgetId);
+                            loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
+                        }
+
                     });
-                }
-
-                if (result) {
-                    this.testingResultPojo.setProfileTesting("OK");
-                    this.thread4 = new Thread(task4);
-                    this.threadMap.put("t3", this.thread4);
-                    this.thread4.start();
-                    this.thread3.stop();
-                } else {
-                    this.testingResultPojo.setProfileTesting("NOT OK");
-                    this.testingResultPojo.setReadWrite("NOT OK");
-                    this.testingResultPojo.setCardStatus("FAULTY");
-                    task4.cancel();
-                    task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
-                    simVerifyMasterThread2.updateTesting(widgetId);
-                    return;
-                }
-            });
-
-            task4.setOnSucceeded(event4 -> {
-                Boolean result = task4.getValue();
-                Platform.runLater(() -> {
                     if (result) {
-                        loggerThread.displayLogs(_terminal, "Read/Write Test Passed", widgetId);
-                        loggerThread.displayLogs(_terminal, "Card is OK.", widgetId);
+
+                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+                        this.testingResultPojo.setDateOfTesting(LocalDate.now().format(dateFormatter));
+                        this.testingResultPojo.setTimeOfTesting(LocalTime.now().format(timeFormatter));
+                        this.testingResultPojo.setTerminalNumber(terminalNumber);
+                        this.testingResultPojo.setTerminalICCID(terminalICCID);
+                        this.testingResultPojo.setTerminalIMSI(terminalIMSI);
+                        this.testingResultPojo.setSIMHeartbeat("OK");
+                        this.thread2 = new Thread(task2);
+                        this.threadMap.put("t2", this.thread2);
+                        ThreadController.addThread(this.thread2);
+                        this.thread2.setName(widgetId + "_task2Thread");
+                        this.thread2.start();
+                        this.thread1.stop();
                     } else {
-                        simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
-                        simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
-                        loggerThread.displayLogs(_terminal, "Read/Write Test failed", widgetId);
+                        this.testingResultPojo.setFileSystemVerification("NOT OK");
+                        this.testingResultPojo.setProfileTesting("NOT OK");
+                        this.testingResultPojo.setReadWrite("NOT OK");
+                        this.testingResultPojo.setCardStatus("FAULTY");
+                        task2.cancel();
+                        task3.cancel();
+                        task4.cancel();
+                        task5.cancel();
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
+                        simVerifyMasterThread2.updateTesting(widgetId);
+
+                        return;
+                    }
+                });
+                task2.setOnSucceeded(event2 -> {
+                    Boolean result = task2.getValue();
+                    Platform.runLater(() -> {
+                        if (result) {
+                            loggerThread.displayLogs(_terminal, _card, "File Verification done", widgetId);
+                        } else {
+
+                            simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
+                            simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "File Verification failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "Skipping Profile Verification", widgetId);
+                            loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
+
+                        }
+                    });
+
+                    if (result) {
+                        this.testingResultPojo.setFileSystemVerification("OK");
+                        this.thread3 = new Thread(task3);
+                        this.thread3.setName(widgetId + "_task3Thread");
+                        this.threadMap.put("t3", this.thread3);
+                        this.thread3.start();
+                        ThreadController.addThread(this.thread3);
+                        this.thread2.stop();
+                    } else {
+                        this.testingResultPojo.setFileSystemVerification("NOT OK");
+                        this.testingResultPojo.setProfileTesting("NOT OK");
+                        this.testingResultPojo.setReadWrite("NOT OK");
+                        this.testingResultPojo.setCardStatus("FAULTY");
+                        task3.cancel();
+                        task4.cancel();
+                        task5.cancel();
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
+                        simVerifyMasterThread2.updateTesting(widgetId);
+                        return;
+                    }
+
+
+                });
+
+                task3.setOnSucceeded(event3 -> {
+                    Boolean result = task3.getValue();
+
+                    if (result) {
+                        loggerThread.displayLogs(_terminal, "Profile Verification done", widgetId);
+                    } else {
+                        Platform.runLater(() -> {
+                            simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
+                            simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "Profile Verification failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "Skipping Read/Write Test", widgetId);
+                        });
+                    }
+
+                    if (result) {
+                        this.testingResultPojo.setProfileTesting("OK");
+                        this.thread4 = new Thread(task4);
+                        this.threadMap.put("t3", this.thread4);
+                        this.thread4.setName(widgetId + "_task4Thread");
+                        this.thread4.start();
+
+                        ThreadController.addThread(this.thread4);
+                        this.thread3.stop();
+                    } else {
+                        this.testingResultPojo.setProfileTesting("NOT OK");
+                        this.testingResultPojo.setReadWrite("NOT OK");
+                        this.testingResultPojo.setCardStatus("FAULTY");
+                        task4.cancel();
+                        task5.cancel();
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
+                        simVerifyMasterThread2.updateTesting(widgetId);
+                        return;
                     }
                 });
 
+                task4.setOnSucceeded(event4 -> {
+                    Boolean result = task4.getValue();
+                    Platform.runLater(() -> {
+                        if (result) {
+                            loggerThread.displayLogs(_terminal, "Read/Write Test Passed", widgetId);
+                            loggerThread.displayLogs(_terminal, "Card is OK.", widgetId);
+                        } else {
+                            simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
+                            simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
+                            loggerThread.displayLogs(_terminal, "Read/Write Test failed", widgetId);
+                        }
+                    });
 
-                if (result) {
-                    this.testingResultPojo.setReadWrite("OK");
-                    this.thread5 = new Thread(task5);
-                    this.threadMap.put("t5", this.thread5);
-                    this.thread5.start();
-                    this.thread4.stop();
-                } else {
-                    this.testingResultPojo.setReadWrite("NOT OK");
-                    this.testingResultPojo.setCardStatus("FAULTY");
-                    task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
-                    simVerifyMasterThread2.updateTesting(widgetId);
-                    return;
-                }
-            });
 
-            task5.setOnSucceeded(event5 -> {
-                Boolean result = task5.getValue();
-                Platform.runLater(() -> {
                     if (result) {
-                        simVerifyMasterThread2.updateWidgetStatusImage(true, widgetId);
-                        simVerifyMasterThread2.updateWidgetStatusLabel("Ok", widgetId);
-                    } else {
-                        simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
-                        simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
-                    }
+                        this.testingResultPojo.setReadWrite("OK");
+                        this.thread5 = new Thread(task5);
+                        this.threadMap.put("t5", this.thread5);
+                        this.thread5.setName(widgetId + "_task5Thread");
+                        this.thread5.start();
 
+                        ThreadController.addThread(this.thread5);
+                        this.thread4.stop();
+                    } else {
+                        this.testingResultPojo.setReadWrite("NOT OK");
+                        this.testingResultPojo.setCardStatus("FAULTY");
+                        task5.cancel();
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
+                        simVerifyMasterThread2.updateTesting(widgetId);
+                        return;
+                    }
+                });
+
+                task5.setOnSucceeded(event5 -> {
+                    Boolean result = task5.getValue();
+                    Platform.runLater(() -> {
+
+                        if (result) {
+                            simVerifyMasterThread2.updateWidgetStatusImage(true, widgetId);
+                            simVerifyMasterThread2.updateWidgetStatusLabel("Ok", widgetId);
+                        } else {
+                            simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
+                            simVerifyMasterThread2.updateWidgetStatusLabel("Failed", widgetId);
+                        }
+
+                    });
                     if (result) {
                         this.testingResultPojo.setCardStatus("OK");
+                        System.out.println("STATUS _ after setting : " + this.testingResultPojo.getCardStatus());
+                        System.out.println("STATUS _ after setting : " + testingResultPojo.getCardStatus());
+
                     } else {
                         this.testingResultPojo.setCardStatus("NOT OK");
-                        simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
 
                     }
+                    simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
+                    System.out.println("STATUS : " + testingResultPojo.getCardStatus());
+                    System.out.println("Testing completed");
+                    simVerifyMasterThread2.updateTesting(widgetId);
                 });
-                simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
-                System.out.println("Testing completed");
-                simVerifyMasterThread2.updateTesting(widgetId);
             });
-
-        });
-
-
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
 
     public String getIMSI(CardTerminal cardTerminal) {
         try {

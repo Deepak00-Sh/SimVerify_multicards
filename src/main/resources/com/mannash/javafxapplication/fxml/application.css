@@ -7,3 +7,9 @@
 -fx-background-radius: 0 ;
 
 }
+button:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}

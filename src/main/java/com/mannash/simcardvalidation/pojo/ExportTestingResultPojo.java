@@ -1,11 +1,12 @@
 package com.mannash.simcardvalidation.pojo;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ExportTestingResultPojo {
+public class ExportTestingResultPojo implements Serializable {
 
     private String dateOfTesting;
 
