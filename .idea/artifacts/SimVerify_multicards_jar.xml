@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="SimVerify_multicards:jar">
-    <output-path>D:/Work/R&amp;D/SIMVerify/lib</output-path>
+    <output-path>$PROJECT_DIR$/../SIMVerify/lib</output-path>
     <root id="archive" name="SimVerify_multicards.jar">
       <element id="module-output" name="SimVerify_multicards" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openjfx/javafx-base/17.0.2/javafx-base-17.0.2-win.jar" path-in-jar="/" />
