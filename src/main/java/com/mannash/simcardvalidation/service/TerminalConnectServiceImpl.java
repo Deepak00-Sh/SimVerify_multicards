@@ -87,7 +87,7 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 						} catch (CardException e) {
 							terminalInfo.setTerminalCardIccid(null);
 							terminalInfo.setImsi(null);
-//							System.out.println("Card connect Exception");
+							System.out.println("Card connect Exception");
 //							this.simVerifyMasterThread2.displayLogs(_terminal,"Card not responding",-1);
 							continue;
 

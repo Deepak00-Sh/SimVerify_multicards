@@ -1,7 +1,6 @@
 package com.mannash.simcardvalidation.service;
 
 import com.google.gson.Gson;
-import com.mannash.simcardvalidation.SimVerifyLoggerThread;
 import com.mannash.simcardvalidation.pojo.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,9 +14,10 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Properties;
 //import com.mannash.trakme.client.pojo.LogType;
 //import com.mannash.trakme.client.pojo.RequestClientLogPojo;
 //import com.mannash.trakme.client.pojo.ResponseAuthenticationPojo;
@@ -37,10 +37,14 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 	private ResponseAuthenticationPojo authenticationPojo;
 	private final Logger logger = LoggerFactory.getLogger(TrakmeServerCommunicationServiceImpl.class);
 	public String hostIP = "";
+	File file ;
+	Properties properties = new Properties();
+	FileInputStream input = null;
+	String filePath = "..\\config\\";
 
-	SimVerifyLoggerThread simVerifyLoggerThread;
-	public TrakmeServerCommunicationServiceImpl(SimVerifyLoggerThread simVerifyLoggerThread) {
-		this.simVerifyLoggerThread = simVerifyLoggerThread;
+
+
+	public TrakmeServerCommunicationServiceImpl() {
 
 //		 this.loggerService = new LoggerServiceImpl();
 
@@ -65,16 +69,24 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
+
+		file = new File(filePath+"user.properties");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	Gson gson;
 
 	ResponseAuthenticationPojo responseAuthenticationPojo = new ResponseAuthenticationPojo();
 
+
 	@SuppressWarnings("deprecation")
 	public ResponseAuthenticationPojo authenticateClient(String userName, String password) {
-
-		ResponseAuthenticationPojo responseAuthenticationPojo = new ResponseAuthenticationPojo();
 		if (userName == null || password == null || userName.isEmpty() || password.isEmpty()) {
 			responseAuthenticationPojo.setMessage("Username or Password can not be empty");
 			return responseAuthenticationPojo;
@@ -93,6 +105,8 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 				if (response != null) {
 					String responseString = EntityUtils.toString((HttpEntity) response.getEntity());
 					if (response.getStatusLine().getStatusCode() != 200) {
+						System.out.println("inside != 200");
+						readCredentialsFromLocal(userName,password);
 						if (responseString != null) {
 							if (response.getStatusLine().getStatusCode() == 401) {
 								responseAuthenticationPojo.setMessage("Invalid username/password");
@@ -108,8 +122,23 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 							responseAuthenticationPojo.setStatusCode(500);
 							// this.logger.debug("Unable to authenticate user with Status code : " + 500);
 						}
-					} else {
+					}
+
+					else {
 						responseAuthenticationPojo.setStatusCode(200);
+						System.out.println("SERVER : user authenticate successfully with user name : "+userName);
+
+						try (FileWriter writer = new FileWriter(file);
+							 BufferedWriter bw = new BufferedWriter(writer)) {
+							bw.write("userId="+userName);
+							bw.newLine();
+							bw.write("password="+password);
+							bw.newLine();
+							// add more user IDs and passwords as required
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
 						// this.logger.info("TrakmeServer authenticated successfully with user" + userName);
 						// System.out.println("Status Code : " + 200);
 					}
@@ -119,14 +148,45 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 					// this.logger.debug("Unable to authenticate user, response is null");
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
-				responseAuthenticationPojo.setMessage("Unable to authenticate user");
-				responseAuthenticationPojo.setStatusCode(500);
+				readCredentialsFromLocal(userName,password);
+//				e.printStackTrace();
+//				responseAuthenticationPojo.setMessage("Unable to authenticate user");
+//				responseAuthenticationPojo.setStatusCode(500);
 				// this.logger.info("Unable to authentcate user");
 			}
 			return responseAuthenticationPojo;
 		}
 
+	}
+
+	public void readCredentialsFromLocal(String userName, String password){
+		String userId=null;
+		String pass = null;
+
+		System.out.println("inside the catch");
+		try {
+			input = new FileInputStream(filePath+"user.properties");
+			properties.load(input);
+			userId = properties.getProperty("userId");
+			pass = properties.getProperty("password");
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		System.out.println("userId from file : "+userId);
+		System.out.println("password from file : "+pass);
+		System.out.println("userId from user : "+userName);
+		System.out.println("password from user : "+password);
+
+		if (userId.equalsIgnoreCase(userName) && pass.equalsIgnoreCase(password)){
+			System.out.println("inside the if condition");
+			responseAuthenticationPojo.setStatusCode(200);
+			System.out.println("PROPERTY FILE : user authenticate successfully with user name : "+userName);
+		}else {
+			responseAuthenticationPojo.setMessage("Invalid username or password");
+		}
 	}
 
 	public ResponseFieldTestingCardInfos fetchWorkOrderInfo(String userName) {
@@ -389,7 +449,6 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 	}
 
 	public ResponseProfileTestingConfig getProfileTestingConfig(String iccid, String woId, String userName) {
-
 		CloseableHttpClient client = HttpClients.createDefault();
 		ResponseProfileTestingConfig responseProfileTestingConfig = new ResponseProfileTestingConfig();
 		try {
@@ -414,6 +473,65 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 			responseProfileTestingConfig
 					.setFileSystemConfig(responseFieldTestingProfileConfigPojo.getFileSystemConfigs());
 			return responseProfileTestingConfig;
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			return null;
+
+		}
+
+		finally {
+
+			try {
+
+				client.close();
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+
+			}
+
+		}
+
+	}
+
+	public ResponseTestingConfig getTestingConfig(String iccid, String woId, String userName) {
+		CloseableHttpClient client = HttpClients.createDefault();
+		ResponseTestingConfig responseTestingConfig = new ResponseTestingConfig();
+		try {
+
+			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
+					+ userName + "&woId=" + woId;
+
+			// this.logger.debug("Calling  Server : " + completeUrl);
+
+			HttpGet get = new HttpGet(completeUrl);
+
+			Gson gson = new Gson();
+			CloseableHttpResponse response = client.execute(get);
+//			String responseString = "{\"fileSystemConfig\":[\"2F05,3F00,T,ALWAYS,CHV1,ADM,ADM,YES,NA,NA,8\",\"2FE2,3F00,T,ALWAYS,NEVER,ADM,ADM,NO,NA,NA,10\",\"2F00,3F00,LF,ALWAYS,ADM,ADM,ADM,YES,53,1,53\"],\"fileContentConfig\":[\"2F05,3F00,T,ALWAYS,1,1,FFFFFFFFFFFFFFFF\",\"2FE2,3F00,T,ALWAYS,1,1,ICCIDI\",\"2F00,3F00,LF,ALWAYS,1,1,41697274656C203447\"]}";
+			// this.System.out.println("Sever Response : " + responseString);
+			String responseString = EntityUtils.toString(response.getEntity());
+
+			ResponseTestingConfig responseFieldTestingConfigPojo = (ResponseTestingConfig) gson
+					.fromJson(responseString, ResponseTestingConfig.class);
+			responseTestingConfig
+					.setFileContentConfig(responseFieldTestingConfigPojo.getFileContentConfig());
+			responseTestingConfig
+					.setFileSystemConfig(responseFieldTestingConfigPojo.getFileSystemConfig());
+			responseTestingConfig
+					.setFileVerificationSystemConfig(responseFieldTestingConfigPojo.getFileVerificationSystemConfig());
+			responseTestingConfig
+					.setFileVerificationContentConfig(responseFieldTestingConfigPojo.getFileVerificationContentConfig());
+			responseTestingConfig
+					.setApduList(responseFieldTestingConfigPojo.getApduList());
+			responseTestingConfig
+					.setLoopCount(responseFieldTestingConfigPojo.getLoopCount());
+
+			return responseTestingConfig;
 
 		} catch (Exception e) {
 

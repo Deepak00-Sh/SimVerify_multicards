@@ -237,21 +237,30 @@ public class TestingController4 implements Initializable, Runnable {
     }
 
     public void stopMainThread() {
+//        try {
+////            getCard().disconnect(false);
+//        } catch (CardException e) {
+//            throw new RuntimeException(e);
+//        }
         for (Map.Entry<String, Thread> entry : this.threadMap.entrySet()) {
             String key = entry.getKey();
             Thread thread = entry.getValue();
             if (thread.isAlive()) {
                 Boolean threadStatus = thread.isAlive();
+                System.out.println("STATUS BEFORE : " + threadStatus);
                 thread.stop();
-                threadStatus = thread.isAlive();
+                Boolean threadStatus2 = thread.isAlive();
+                System.out.println("STATUS AFTER : " + threadStatus2);
             }
-//            if(thread.isDaemon())
             System.out.println(Thread.currentThread().isAlive());
         }
     }
 
     public void run() {
 
+        if (Thread.currentThread().isInterrupted()) {
+            return;
+        }
         TerminalInfo localTerminal = terminal;
 
         System.out.println("WIDGET ID outside task : " + this.widgetId);
@@ -295,7 +304,6 @@ public class TestingController4 implements Initializable, Runnable {
                     String imsi = getIMSI(cardTerminal);
                     terminalIMSI = imsi;
                     loggerThread.displayLogs(_terminal, "IMSI Value " + imsi, widgetId);
-
 
 
                     //setting date and time to pojo

@@ -26,8 +26,8 @@ public class LoggerServiceImpl implements LoggerService {
 
 	public LoggerServiceImpl()
 	{
-//		FieldTestingLoggerThread fieldTestingLoggerThread = new FieldTestingLoggerThread(this,new TrakmeServerCommunicationServiceImpl());
-//		fieldTestingLoggerThread.start();
+		FieldTestingLoggerThread fieldTestingLoggerThread = new FieldTestingLoggerThread(this,new TrakmeServerCommunicationServiceImpl());
+		fieldTestingLoggerThread.start();
 	}
 	
 	public RequestClientLogPojo pollLogs() {

@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="commons-csv-1.10.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../SIMVerify/lib/commons-csv-1.10.0.jar!/" />
+      <root url="jar://D:/Work/R&amp;D/SIMVerify/lib/commons-csv-1.10.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

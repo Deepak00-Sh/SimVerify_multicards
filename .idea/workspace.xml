@@ -9,11 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_csv_1_10_0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mannash/simcardvalidation/TestingController4.java" afterDir="false" />
-    </list>
+    <list default="true" id="08806b69-6f2c-4550-a435-1081ebc30207" name="Changes" comment="Authentication and config API implementation of client side" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,13 +18,17 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/master" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -46,11 +46,12 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "D:/work/SIMCardValidationProject/SIMVerify/lib",
-    "project.structure.last.edited": "Artifacts",
+    "last_opened_file_path": "D:/Work/R&D/SIMVerify/lib/New folder/json-20090211.jar",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.26666668",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
+    "project.structure.side.proportion": "0.39425287",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.splitter.proportion": "0.24159022"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -105,7 +106,21 @@
       <option name="project" value="LOCAL" />
       <updated>1679459240957</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Removed comments of logger thead">
+      <created>1679551777434</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1679551777434</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Authentication and config API implementation of client side">
+      <created>1679663711714</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1679663711714</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -113,7 +128,34 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+            </list>
           </value>
         </entry>
       </map>
@@ -128,6 +170,12 @@
     <MESSAGE value="Master thread implemented" />
     <MESSAGE value="Updated project till the client-side implementation without the cancelling all threads logic" />
     <MESSAGE value="vcs" />
-    <option name="LAST_COMMIT_MESSAGE" value="vcs" />
+    <MESSAGE value="Removed comments of logger thead" />
+    <MESSAGE value="Authentication and config API implementation of client side" />
+    <option name="LAST_COMMIT_MESSAGE" value="Authentication and config API implementation of client side" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
