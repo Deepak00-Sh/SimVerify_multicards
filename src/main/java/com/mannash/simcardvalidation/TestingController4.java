@@ -6,8 +6,6 @@ import com.mannash.simcardvalidation.card.StressTest;
 import com.mannash.simcardvalidation.pojo.ExportTestingResultPojo;
 import com.mannash.simcardvalidation.pojo.TerminalInfo;
 import com.mannash.simcardvalidation.service.LoggerService;
-import com.mannash.simcardvalidation.service.TerminalConnectService;
-import com.mannash.simcardvalidation.service.TerminalConnectServiceImpl;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -24,12 +22,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -433,7 +429,7 @@ public class TestingController4 implements Initializable, Runnable {
                     task3.cancel();
                     task4.cancel();
                     task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                    simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
                     simVerifyMasterThread2.updateTesting(widgetId);
 
                     return;
@@ -470,7 +466,7 @@ public class TestingController4 implements Initializable, Runnable {
                     task3.cancel();
                     task4.cancel();
                     task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                    simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
                     simVerifyMasterThread2.updateTesting(widgetId);
                     return;
                 }
@@ -504,7 +500,7 @@ public class TestingController4 implements Initializable, Runnable {
                     this.testingResultPojo.setCardStatus("FAULTY");
                     task4.cancel();
                     task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                    simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
                     simVerifyMasterThread2.updateTesting(widgetId);
                     return;
                 }
@@ -534,7 +530,7 @@ public class TestingController4 implements Initializable, Runnable {
                     this.testingResultPojo.setReadWrite("NOT OK");
                     this.testingResultPojo.setCardStatus("FAULTY");
                     task5.cancel();
-                    simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                    simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
                     simVerifyMasterThread2.updateTesting(widgetId);
                     return;
                 }
@@ -555,11 +551,11 @@ public class TestingController4 implements Initializable, Runnable {
                         this.testingResultPojo.setCardStatus("OK");
                     } else {
                         this.testingResultPojo.setCardStatus("NOT OK");
-                        simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
 
                     }
                 });
-                simVerifyMasterThread2.cardTestingResultMap.put(this.widgetId, testingResultPojo);
+                simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
                 System.out.println("Testing completed");
                 simVerifyMasterThread2.updateTesting(widgetId);
             });

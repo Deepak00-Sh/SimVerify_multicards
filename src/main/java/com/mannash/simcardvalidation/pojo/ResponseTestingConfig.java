@@ -7,8 +7,8 @@ public class ResponseTestingConfig {
     long loopCount;
     List<String> fileSystemConfig;
     List<String> fileContentConfig;
-    List<String> fileVerificationSystemConfig;
-    List<String> fileVerificationContentConfig;
+//    List<String> fileVerificationSystemConfig;
+//    List<String> fileVerificationContentConfig;
     public List<String> getApduList() {
         return apduList;
     }
@@ -42,21 +42,21 @@ public class ResponseTestingConfig {
         this.fileContentConfig = fileContentConfig;
     }
 
-    public List<String> getFileVerificationSystemConfig() {
-        return fileVerificationSystemConfig;
-    }
-
-    public void setFileVerificationSystemConfig(List<String> fileVerificationSystemConfig) {
-        this.fileVerificationSystemConfig = fileVerificationSystemConfig;
-    }
-
-    public List<String> getFileVerificationContentConfig() {
-        return fileVerificationContentConfig;
-    }
-
-    public void setFileVerificationContentConfig(List<String> fileVerificationContentConfig) {
-        this.fileVerificationContentConfig = fileVerificationContentConfig;
-    }
+//    public List<String> getFileVerificationSystemConfig() {
+//        return fileVerificationSystemConfig;
+//    }
+//
+//    public void setFileVerificationSystemConfig(List<String> fileVerificationSystemConfig) {
+//        this.fileVerificationSystemConfig = fileVerificationSystemConfig;
+//    }
+//
+//    public List<String> getFileVerificationContentConfig() {
+//        return fileVerificationContentConfig;
+//    }
+//
+//    public void setFileVerificationContentConfig(List<String> fileVerificationContentConfig) {
+//        this.fileVerificationContentConfig = fileVerificationContentConfig;
+//    }
 
 
 }

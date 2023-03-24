@@ -498,6 +498,37 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 	}
 
+	public int sendReportsToServer(String userName, List cardTestingPojos){
+		CloseableHttpClient client = HttpClients.createDefault();
+		try {
+//			String completeUrl = "http://localhost:8080/url?usrId="
+//					+ userName + "&woId=" + woID + "&iccid=" + iccid + "&counter=" + counter + "&cardStageId="
+//					+ cardStageId;
+
+			String completeUrl = "url";
+
+			// this.logger.debug("Calling  Server : " + completeUrl);
+
+			HttpPost post = new HttpPost(completeUrl);
+
+			Gson gson = new Gson();
+			CloseableHttpResponse response = client.execute(post);
+			String responseString = EntityUtils.toString(response.getEntity());
+
+			return response.getStatusLine().getStatusCode();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public ResponseTestingConfig getTestingConfig(String iccid, String woId, String userName) {
 		CloseableHttpClient client = HttpClients.createDefault();
 		ResponseTestingConfig responseTestingConfig = new ResponseTestingConfig();
@@ -522,10 +553,10 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 					.setFileContentConfig(responseFieldTestingConfigPojo.getFileContentConfig());
 			responseTestingConfig
 					.setFileSystemConfig(responseFieldTestingConfigPojo.getFileSystemConfig());
-			responseTestingConfig
-					.setFileVerificationSystemConfig(responseFieldTestingConfigPojo.getFileVerificationSystemConfig());
-			responseTestingConfig
-					.setFileVerificationContentConfig(responseFieldTestingConfigPojo.getFileVerificationContentConfig());
+//			responseTestingConfig
+//					.setFileVerificationSystemConfig(responseFieldTestingConfigPojo.getFileVerificationSystemConfig());
+//			responseTestingConfig
+//					.setFileVerificationContentConfig(responseFieldTestingConfigPojo.getFileVerificationContentConfig());
 			responseTestingConfig
 					.setApduList(responseFieldTestingConfigPojo.getApduList());
 			responseTestingConfig

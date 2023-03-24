@@ -75,12 +75,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.13.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.25</version>
@@ -99,6 +93,11 @@
             <groupId>com.github.lbovolini</groupId>
             <artifactId>ObjectMapper</artifactId>
             <version>0.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.objectfabric</groupId>
+            <artifactId>objectfabric-cachebuilder</artifactId>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>
 
