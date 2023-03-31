@@ -47,7 +47,7 @@
                             <Insets bottom="5.0" left="6.0" top="10.0" />
                         </HBox.margin>
                     </ImageView>
-                    <MenuButton id="logOut" fx:id="logOut" mnemonicParsing="false" text="Profile">
+                    <MenuButton id="logOut" fx:id="logOut" mnemonicParsing="false" style="-fx-cursor: hand; -fx-focus-traversable: false;" text="Profile">
                         <items>
                             <MenuItem id="updateButton" fx:id="updateButton" mnemonicParsing="false" onAction="#checkUpdate" text="Update App" />
                         </items>

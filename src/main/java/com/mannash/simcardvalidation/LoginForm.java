@@ -43,7 +43,6 @@ public class LoginForm extends Application {
             loginStage.setResizable(false);
             loginStage.setTitle("SIM Verify!");
             loginStage.show();
-
             loginStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {

@@ -15,7 +15,7 @@
             <children>
                 <HBox prefHeight="82.0" prefWidth="515.0" style="-fx-background-color: lightgrey;">
                     <children>
-                        <VBox prefHeight="65.0" prefWidth="372.0">
+                        <VBox prefHeight="68.0" prefWidth="395.0">
                             <children>
                                 <HBox alignment="CENTER_LEFT" prefHeight="21.0" prefWidth="104.0">
                                     <children>
@@ -58,7 +58,7 @@
                         </VBox>
                         <VBox prefHeight="65.0" prefWidth="194.0">
                             <children>
-                                <HBox alignment="CENTER_LEFT" prefHeight="65.0" prefWidth="228.0">
+                                <HBox alignment="CENTER_LEFT" prefHeight="65.0" prefWidth="139.0">
                                     <children>
                                         <ImageView id="popUpWindowStatusImage" fx:id="popUpWindowStatusImage" fitHeight="43.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true" />
                                         <Label id="TestingStatusLabel" fx:id="TestingStatusLabel" prefHeight="17.0" prefWidth="130.0" text="--">
@@ -168,11 +168,4 @@
             </children>
         </VBox>
     </children>
-   <effect>
-      <InnerShadow radius="11.0" width="25.0">
-         <color>
-            <Color red="0.10526315867900848" green="0.10103963315486908" blue="0.10103963315486908" />
-         </color>
-      </InnerShadow>
-   </effect>
 </StackPane>
