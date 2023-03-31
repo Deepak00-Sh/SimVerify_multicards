@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="515.0" stylesheets="application.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mannash.simcardvalidation.SimVerifyPopUpWindowController">
+    <children>
+        <VBox prefHeight="228.0" prefWidth="549.0" style="-fx-background-radius: 15;">
+            <children>
+                <HBox prefHeight="82.0" prefWidth="515.0" style="-fx-background-color: lightgrey;">
+                    <children>
+                        <VBox prefHeight="65.0" prefWidth="372.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" prefHeight="21.0" prefWidth="104.0">
+                                    <children>
+                                        <Label alignment="CENTER" text="ICCID : ">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label id="popup_iccid" fx:id="popup_iccid" text="--">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="5.0" top="10.0" />
+                                    </VBox.margin>
+                                </HBox>
+                                <HBox layoutX="10.0" layoutY="10.0" prefHeight="21.0" prefWidth="104.0">
+                                    <children>
+                                        <Label alignment="CENTER" text="IMSI : ">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label id="popup_imsi" fx:id="popup_imsi" text="--">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="7.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets left="5.0" top="5.0" />
+                                    </VBox.margin>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="65.0" prefWidth="194.0">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" prefHeight="65.0" prefWidth="228.0">
+                                    <children>
+                                        <ImageView id="popUpWindowStatusImage" fx:id="popUpWindowStatusImage" fitHeight="43.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true" />
+                                        <Label id="TestingStatusLabel" fx:id="TestingStatusLabel" prefHeight="17.0" prefWidth="130.0" text="--">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                            <HBox.margin>
+                                                <Insets left="5.0" />
+                                            </HBox.margin>
+                                        </Label>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+               <VBox.margin>
+                  <Insets bottom="2.0" />
+               </VBox.margin>
+                </HBox>
+                <VBox alignment="CENTER" prefHeight="161.0" prefWidth="520.0" style="-fx-background-radius: 20;">
+                    <children>
+                        <AnchorPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="89.0" prefWidth="515.0">
+                            <children>
+                        <HBox layoutY="23.0" prefHeight="32.0" prefWidth="515.0">
+                           <children>
+                              <Rectangle id="stage1_rectBox" fx:id="stage1_rectBox" arcHeight="5.0" arcWidth="5.0" fill="#ede9e9" height="13.0" stroke="BLACK" strokeType="INSIDE" style="-fx-stroke: transparent;" width="109.0">
+                                 <HBox.margin>
+                                    <Insets left="5.0" top="10.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <InnerShadow>
+                                       <color>
+                                          <Color red="0.5686274766921997" green="0.5568627715110779" blue="0.5568627715110779" />
+                                       </color>
+                                    </InnerShadow>
+                                 </effect>
+                              </Rectangle>
+                              <Rectangle id="stage2_rectBox" fx:id="stage2_rectBox" arcHeight="5.0" arcWidth="5.0" fill="#ede9e9" height="13.0" layoutX="10.0" layoutY="17.0" stroke="BLACK" strokeType="INSIDE" style="-fx-stroke: transparent;" width="113.0">
+                                 <HBox.margin>
+                                    <Insets top="10.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <InnerShadow>
+                                       <color>
+                                          <Color red="0.5686274766921997" green="0.5568627715110779" blue="0.5568627715110779" />
+                                       </color>
+                                    </InnerShadow>
+                                 </effect>
+                              </Rectangle>
+                              <Rectangle id="stage3_rectBox" fx:id="stage3_rectBox" arcHeight="5.0" arcWidth="5.0" fill="#ede9e9" height="13.0" layoutX="111.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" style="-fx-stroke: transparent;" width="111.0">
+                                 <HBox.margin>
+                                    <Insets top="10.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <InnerShadow>
+                                       <color>
+                                          <Color red="0.5686274766921997" green="0.5568627715110779" blue="0.5568627715110779" />
+                                       </color>
+                                    </InnerShadow>
+                                 </effect>
+                              </Rectangle>
+                              <Rectangle id="stage4_rectBox" fx:id="stage4_rectBox" arcHeight="5.0" arcWidth="5.0" fill="#ede9e9" height="13.0" layoutX="210.0" layoutY="16.0" stroke="BLACK" strokeType="INSIDE" style="-fx-stroke: transparent;" width="111.0">
+                                 <HBox.margin>
+                                    <Insets top="10.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <InnerShadow>
+                                       <color>
+                                          <Color red="0.5686274766921997" green="0.5568627715110779" blue="0.5568627715110779" />
+                                       </color>
+                                    </InnerShadow>
+                                 </effect>
+                              </Rectangle>
+                           </children>
+                           <padding>
+                              <Insets left="17.0" />
+                           </padding>
+                        </HBox>
+                                <Label id="label_stage1" fx:id="label_stage1" alignment="TOP_LEFT" layoutX="87.0" layoutY="-4.0" text="SIM Heartbeat" textFill="#bcbcbc" AnchorPane.leftAnchor="87.0" />
+                                <ImageView id="stage2_image" fx:id="stage2_image" fitHeight="32.0" fitWidth="32.0" layoutX="227.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/lightgreycircle.png" /> </image>
+                                </ImageView>
+                                <Label id="label_stage2" fx:id="label_stage2" layoutX="181.0" layoutY="64.0" text="File System Verification" textFill="#bcbcbc">
+                                </Label>
+                                <ImageView id="stage3_image" fx:id="stage3_image" fitHeight="32.0" fitWidth="32.0" layoutX="335.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/lightgreycircle.png" /> </image>
+                                </ImageView>
+                                <Label id="label_stage3" fx:id="label_stage3" layoutX="301.0" layoutY="-4.0" text="Profile Verification" textFill="#bcbcbc">
+                                </Label>
+                                <ImageView id="stage4_image" fx:id="stage4_image" fitHeight="32.0" fitWidth="32.0" layoutX="449.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@images/lightgreycircle.png" /> </image>
+                                </ImageView>
+                                <Label id="label_stage4" fx:id="label_stage4" layoutX="422.0" layoutY="64.0" text="Read/Write Test" textFill="#bcbcbc">
+                                </Label>
+                                <ImageView id="stage1_image" fx:id="stage1_image" fitHeight="32.0" fitWidth="32.0" layoutX="111.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
+
+                                    <image>
+                                        <Image url="@images/lightgreycircle.png" /> </image>
+                                </ImageView>
+                            </children>
+                        </AnchorPane>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+   <effect>
+      <InnerShadow radius="11.0" width="25.0">
+         <color>
+            <Color red="0.10526315867900848" green="0.10103963315486908" blue="0.10103963315486908" />
+         </color>
+      </InnerShadow>
+   </effect>
+</StackPane>
