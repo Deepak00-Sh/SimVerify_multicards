@@ -3,10 +3,13 @@ package com.mannash.simcardvalidation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -14,7 +17,16 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-public class LoginForm extends Application {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class LoginForm extends Application implements Initializable {
+
+    CheckUpdate checkUpdate = new CheckUpdate();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
     @Override
     public void start(Stage stage) throws Exception {
         Image icon = new Image("/com/mannash/javafxapplication/fxml/images/airtelair2.png");
@@ -43,6 +55,18 @@ public class LoginForm extends Application {
             loginStage.setResizable(false);
             loginStage.setTitle("SIM Verify!");
             loginStage.show();
+
+            try {
+                if (!checkUpdate.getCurrentVersion().equals(checkUpdate.getLatestVersion())) {
+                    System.out.println("Updated ");
+                    System.out.println("CUrrent version : " + checkUpdate.getCurrentVersion());
+                    System.out.println("New Version : " + checkUpdate.getLatestVersion());
+                    checkUpdate.downloadUpdatedJarFileOnStart();
+                }
+
+            }catch (Exception e){
+                System.out.println("Unable to fetch version from the server , so skipping update on start!!");
+            }
             loginStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
@@ -52,8 +76,9 @@ public class LoginForm extends Application {
         }));
         timeline.play();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }
