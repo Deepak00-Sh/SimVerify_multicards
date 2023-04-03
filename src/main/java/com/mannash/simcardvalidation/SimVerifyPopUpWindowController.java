@@ -76,16 +76,10 @@ public class SimVerifyPopUpWindowController {
 
     @FXML
     private ImageView stage4_image;
-
-
-
-
     //right image
     Image rightImage = new Image("/com/mannash/javafxapplication/fxml/images/correct.png");
     Image crossImage = new Image("/com/mannash/javafxapplication/fxml/images/cross.png");
-
 //    Image okImage = new Image("/com/mannash/javafxapplication/fxml/images/ok.jpg");
-
     Image notOkImage = new Image("/com/mannash/javafxapplication/fxml/images/nok.png");
 
 

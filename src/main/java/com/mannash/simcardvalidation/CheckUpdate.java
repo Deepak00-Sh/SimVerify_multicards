@@ -28,9 +28,10 @@ import java.util.regex.Pattern;
 
 public class CheckUpdate {
 
-    private static final String VERSION_FILE_URL = "file:///C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\webapps\\myapp\\version.txt"; // URL of version file on server
-    private static final String JAR_FILE_URL = "http://localhost:8080/myapp/simverify_multicards-1.0.jar"; // URL of jar file on server
-    private static final String LOCAL_FILE_PATH = "..\\lib\\simverify_multicards-1.0.jar"; // Local file path of jar file
+    private static final String VERSION_FILE_URL = "http://trakme.mannash.com/trakmeserver/simverify/multiCards/version.txt"; // URL of version file on server
+    private static final String JAR_FILE_URL = "http://trakme.mannash.com/trakmeserver/simverify/multiCards/simverify_multicards-1.0-SNAPSHOT.jar";
+    private static final String LOCAL_FILE_PATH = "..\\lib\\simverify_multicards-1.0-SNAPSHOT.jar";
+    private static final String LOCAL_JAR_DOWNLOAD_PATH = "..\\updates\\simverify_multicards-1.0-SNAPSHOT.jar";
     private String currentVersion;
     private String latestVersion;
     String versionFilePath = "..\\config\\version.txt";
@@ -85,7 +86,7 @@ public class CheckUpdate {
                 Files.createDirectories(updateDir);
             }
             // download JAR file to updates directory
-            Path updateFilePath = Paths.get("..\\updates\\simverify_multicards-1.0.jar");
+            Path updateFilePath = Paths.get(LOCAL_JAR_DOWNLOAD_PATH);
             URL url = new URL(JAR_FILE_URL);
 
             // show download progress dialog
@@ -161,6 +162,42 @@ public class CheckUpdate {
             e.printStackTrace();
         }
     }
+    public void downloadOnStart(){
+        try {
+            // create updates directory if it doesn't exist
+            Path updateDir = Paths.get("..\\updates");
+            if (!Files.exists(updateDir)) {
+                Files.createDirectories(updateDir);
+            }
+            // download JAR file to updates directory
+            Path updateFilePath = Paths.get(LOCAL_JAR_DOWNLOAD_PATH);
+            URL url = new URL(JAR_FILE_URL);
+            Files.copy(url.openStream(), updateFilePath, StandardCopyOption.REPLACE_EXISTING);
+            // show download complete message and close the application
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("Download Complete");
+//            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+//            stage.getIcons().add(new Image("/com/mannash/javafxapplication/fxml/images/airtelair2.png"));
+//            alert.setHeaderText("The update has been downloaded.");
+//            alert.setContentText("Please restart the application to apply the update.");
+//            alert.showAndWait();
+//
+//            //updating new version in config
+////            updateNewVersionInConfig("1.1");
+//            //closing application
+//            System.exit(0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Download Failed");
+//            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+//            stage.getIcons().add(new Image("/com/mannash/javafxapplication/fxml/images/airtelair2.png"));
+//            alert.setHeaderText("Failed to download the update.");
+//            alert.setContentText("Please try again later.");
+//            alert.showAndWait();
+        }
+    }
 
     public void downloadJarFile() {
         try {
@@ -170,7 +207,7 @@ public class CheckUpdate {
                 Files.createDirectories(updateDir);
             }
             // download JAR file to updates directory
-            Path updateFilePath = Paths.get("..\\updates\\simverify_multicards-1.0.jar");
+            Path updateFilePath = Paths.get(LOCAL_JAR_DOWNLOAD_PATH);
             URL url = new URL(JAR_FILE_URL);
             Files.copy(url.openStream(), updateFilePath, StandardCopyOption.REPLACE_EXISTING);
             // show download complete message and close the application

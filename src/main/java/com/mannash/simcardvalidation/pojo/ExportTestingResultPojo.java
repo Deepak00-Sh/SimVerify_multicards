@@ -1,17 +1,28 @@
 package com.mannash.simcardvalidation.pojo;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ExportTestingResultPojo implements Serializable {
 
     private String dateOfTesting;
-
-
     private String timeOfTesting;
+    private String userName;
+    private int terminalNumber;
+    private String terminalICCID;
+    private String terminalIMSI;
+    private String simHeartbeat;
+    private String fileSystemVerification;
+    private String profileTesting;
+    private String readWrite;
+    private String testCompilation;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getDateOfTesting() {
         return dateOfTesting;
@@ -29,14 +40,6 @@ public class ExportTestingResultPojo implements Serializable {
         this.timeOfTesting = timeOfTesting;
     }
 
-    private int terminalNumber;
-    private String terminalICCID;
-    private String terminalIMSI;
-    private String SIMHeartbeat;
-    private String fileSystemVerification;
-    private String profileTesting;
-    private String readWrite;
-    private String testCompilation;
 
     public String getCardStatus() {
         return cardStatus;
@@ -73,12 +76,12 @@ public class ExportTestingResultPojo implements Serializable {
         this.terminalICCID = terminalICCID;
     }
 
-    public String getSIMHeartbeat() {
-        return SIMHeartbeat;
+    public String getSimHeartbeat() {
+        return simHeartbeat;
     }
 
-    public void setSIMHeartbeat(String SIMHeartbeat) {
-        this.SIMHeartbeat = SIMHeartbeat;
+    public void setSimHeartbeat(String simHeartbeat) {
+        this.simHeartbeat = simHeartbeat;
     }
 
     public String getFileSystemVerification() {

@@ -104,7 +104,7 @@
                     </children>
                 </HBox>
 
-                <ListView id="cardsConnectedList" fx:id="cardsConnectedList" maxHeight="-Infinity" prefWidth="175.0" style="-fx-background-color: inherit;" VBox.vgrow="ALWAYS">
+                <ListView id="cardsConnectedList" fx:id="cardsConnectedList" maxHeight="-Infinity" prefHeight="360.0" prefWidth="175.0" style="-fx-background-color: inherit;" VBox.vgrow="ALWAYS">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>

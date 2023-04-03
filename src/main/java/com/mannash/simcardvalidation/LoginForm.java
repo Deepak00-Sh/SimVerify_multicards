@@ -17,7 +17,10 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class LoginForm extends Application implements Initializable {
@@ -27,6 +30,19 @@ public class LoginForm extends Application implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
     }
+    public static String getVersion(){
+        InputStream inputStream = LoginForm.class.getClassLoader().getResourceAsStream("application.properties");
+        Properties properties = new Properties();
+        try {
+            properties.load(inputStream);
+
+        } catch (IOException e) {
+            System.out.println("Application.properties file not found!!");
+            e.printStackTrace();
+        }
+        return properties.getProperty("version");
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Image icon = new Image("/com/mannash/javafxapplication/fxml/images/airtelair2.png");
@@ -53,7 +69,7 @@ public class LoginForm extends Application implements Initializable {
             loginStage.getIcons().add(icon);
             loginStage.setScene(loginScene);
             loginStage.setResizable(false);
-            loginStage.setTitle("SIM Verify!");
+            loginStage.setTitle("SIM Verify-v"+getVersion());
             loginStage.show();
 
             try {
@@ -61,7 +77,8 @@ public class LoginForm extends Application implements Initializable {
                     System.out.println("Updated ");
                     System.out.println("CUrrent version : " + checkUpdate.getCurrentVersion());
                     System.out.println("New Version : " + checkUpdate.getLatestVersion());
-                    checkUpdate.downloadUpdatedJarFileOnStart();
+//                    checkUpdate.downloadUpdatedJarFileOnStart();
+                    checkUpdate.downloadOnStart();
                 }
 
             }catch (Exception e){

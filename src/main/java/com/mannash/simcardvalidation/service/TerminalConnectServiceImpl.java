@@ -2,6 +2,7 @@ package com.mannash.simcardvalidation.service;
 
 import com.mannash.simcardvalidation.SimVerifyLoggerThread;
 import com.mannash.simcardvalidation.SimVerifyMasterThread2;
+import com.mannash.simcardvalidation.pojo.ExportTestingResultPojo;
 import com.mannash.simcardvalidation.pojo.TerminalInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,9 @@ import javax.smartcardio.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -31,12 +35,14 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
     public String _card = "C";
     public String _device = "D";
     public String _ui = "UI";
-    SimVerifyMasterThread2 simVerifyMasterThread2;
+    SimVerifyMasterThread2 simVerifyMasterThread2 ;
+
 
     public TerminalConnectServiceImpl(SimVerifyLoggerThread loggerThread, SimVerifyMasterThread2 masterThread) {
         this.loggerThread = loggerThread;
         this.loggerService = new LoggerServiceImpl();
         this.simVerifyMasterThread2 = masterThread;
+
     }
 
     public List<TerminalInfo> fetchTerminalInfo() {
@@ -55,17 +61,17 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
         List<CardTerminal> list = null;
         try {
             list = terminalFactory.terminals().list();
-            if (list == null) {
-                this.simVerifyMasterThread2.displayLogs(_terminal, "No device found", -1);
+            if (list == null){
+                this.simVerifyMasterThread2.displayLogs(_terminal,"No device found",-1);
 
 
-            } else {
-                this.simVerifyMasterThread2.displayLogs(_terminal, "Devices available", -1);
-                this.simVerifyMasterThread2.displayLogs(_terminal, _card, "Connecting to devices", -1);
+            }else {
+                this.simVerifyMasterThread2.displayLogs(_terminal,"Devices available",-1);
+                this.simVerifyMasterThread2.displayLogs(_terminal,_card,"Connecting to devices",-1);
             }
+            int terminalIndex = 1;
             for (CardTerminal cardTerminal : list) {
                 try {
-
                     System.out.println("Card Terminal : " + cardTerminal.toString());
                     // cardTerminal.waitForCardPresent(10000);
                     TerminalInfo terminalInfo = new TerminalInfo();
@@ -89,6 +95,25 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
                             terminalInfo.setImsi(null);
                             System.out.println("Card connect Exception");
 //							this.simVerifyMasterThread2.displayLogs(_terminal,"Card not responding",-1);
+                            ExportTestingResultPojo testingResultPojo = new ExportTestingResultPojo();
+
+
+                            testingResultPojo.setProfileTesting("NOT OK");
+                            testingResultPojo.setSimHeartbeat("NOT OK");
+                            testingResultPojo.setFileSystemVerification("NOT OK");
+                            testingResultPojo.setReadWrite("NOT OK");
+                            testingResultPojo.setCardStatus("FAULTY");
+
+                            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+                            testingResultPojo.setDateOfTesting(LocalDate.now().format(dateFormatter));
+                            testingResultPojo.setTimeOfTesting(LocalTime.now().format(timeFormatter));
+                            testingResultPojo.setUserName(SimVerifyMasterThread2.loggedInUserName);
+                            testingResultPojo.setTerminalNumber(terminalIndex);
+                            testingResultPojo.setTerminalICCID("");
+                            testingResultPojo.setTerminalIMSI("");
+                            simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
+                            terminalIndex++;
                             continue;
 
                         }
@@ -109,6 +134,26 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
                             terminalInfo.setTerminalCardIccid(iccid);
                             terminalInfo.setImsi(imsi);
                         }
+                    }else {
+                        System.out.println("Terminal number : "+(terminalIndex)+" card not present");
+
+                        ExportTestingResultPojo testingResultPojo = new ExportTestingResultPojo();
+                        testingResultPojo.setProfileTesting("NOT OK");
+                        testingResultPojo.setSimHeartbeat("NOT OK");
+                        testingResultPojo.setFileSystemVerification("NOT OK");
+                        testingResultPojo.setReadWrite("NOT OK");
+                        testingResultPojo.setCardStatus("FAULTY/ABSENT");
+
+                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+
+                        testingResultPojo.setDateOfTesting(LocalDate.now().format(dateFormatter));
+                        testingResultPojo.setTimeOfTesting(LocalTime.now().format(timeFormatter));
+                        testingResultPojo.setUserName(SimVerifyMasterThread2.loggedInUserName);
+                        testingResultPojo.setTerminalNumber(terminalIndex);
+                        testingResultPojo.setTerminalICCID("");
+                        testingResultPojo.setTerminalIMSI("");
+                        simVerifyMasterThread2.cardTestingPojosList.add(testingResultPojo);
                     }
                 } catch (CardException cardException) {
                     System.out.println("Exception 1");
@@ -119,18 +164,18 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
                     cardException.printStackTrace();
 
                 }
-
+                terminalIndex++;
             }
         } catch (Throwable e) {
             e.printStackTrace();
-            this.simVerifyMasterThread2.displayLogs(_terminal, "No device found", -1);
+            this.simVerifyMasterThread2.displayLogs(_terminal,"No device found",-1);
             // this.logger.info("Terminal is not connected.");
         }
         return terminalInfos;
     }
 
     @Override
-    public int fetchTerminalCount() {
+    public int fetchTerminalCount(){
         clearTerminal();
         TerminalFactory terminalFactory = null;
         try {
@@ -144,19 +189,19 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
         List<CardTerminal> list = null;
         try {
             list = terminalFactory.terminals().list();
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
-        if (list == null) {
+        if (list == null){
             return 0;
-        } else {
+        }else {
             return list.size();
         }
     }
 
     public String getICCID(CardTerminal cardTerminal) {
         try {
-            String response = null;
+            String response =  null;
 //			cardTerminal = TerminalFactory.getDefault().terminals().list().get(0);
             // sendRawApduNoPrint(cardTerminal, "A0A4000002 3F00");
 
@@ -335,18 +380,13 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
         return str;
     }
 
-    private void clearTerminal() {
+    private void clearTerminal(){
         try {
             Class pcscterminal = Class.forName("sun.security.smartcardio.PCSCTerminals");
             Field contextId = pcscterminal.getDeclaredField("contextId");
             contextId.setAccessible(true);
-            System.out.println("Context ToString : " + contextId.toString());
-            System.out.println("Context TogenericString : " + contextId.toGenericString());
-
-            System.out.println("CONTEXT ID : " + contextId);
 
             if (contextId.getLong(pcscterminal) != 0L) {
-                System.out.println("Long value : " + contextId.getLong(pcscterminal));
                 // First get a new context value
                 Class pcsc = Class.forName("sun.security.smartcardio.PCSC");
                 Method SCardEstablishContext = pcsc.getDeclaredMethod(
@@ -374,7 +414,7 @@ public class TerminalConnectServiceImpl implements TerminalConnectService {
 
                 clearMap.invoke(fieldTerminals.get(terminals));
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
 

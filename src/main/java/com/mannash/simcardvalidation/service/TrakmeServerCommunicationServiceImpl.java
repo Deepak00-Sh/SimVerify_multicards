@@ -95,7 +95,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 		else {
 			try {
 				org.apache.http.client.HttpClient client = new DefaultHttpClient();
-				String completeUrl = "http://localhost:8080/trakmeserver/api/external/auth/validateUser?userId="
+				String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/auth/validateUser?userId="
 						+ userName + "&password=" + URLEncoder.encode(password);
 
 				HttpPost httpPost = new HttpPost(completeUrl);
@@ -106,54 +106,56 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 					String responseString = EntityUtils.toString((HttpEntity) response.getEntity());
 					if (response.getStatusLine().getStatusCode() != 200) {
 						System.out.println("inside != 200");
+
 						if (readCredentialsFromLocal(userName, password)) {
 							return responseAuthenticationPojo;
 						}
-							if (responseString != null) {
-								if (response.getStatusLine().getStatusCode() == 401) {
-									responseAuthenticationPojo.setMessage("Invalid username/password");
-									// this.logger.error("Invalid Username & Password , Status code : " + 401);
-									responseAuthenticationPojo.setStatusCode(401);
-								} else {
-									responseAuthenticationPojo.setMessage("Unable to authenticate user");
-									// this.logger.debug("Unable to authenticate user with Status code : " + response.getStatusLine().getStatusCode());
-									responseAuthenticationPojo.setStatusCode(response.getStatusLine().getStatusCode());
-								}
+						if (responseString != null) {
+							if (response.getStatusLine().getStatusCode() == 401) {
+								responseAuthenticationPojo.setMessage("Invalid username/password");
+								// this.logger.error("Invalid Username & Password , Status code : " + 401);
+								responseAuthenticationPojo.setStatusCode(401);
 							} else {
 								responseAuthenticationPojo.setMessage("Unable to authenticate user");
-								responseAuthenticationPojo.setStatusCode(500);
-								// this.logger.debug("Unable to authenticate user with Status code : " + 500);
+								// this.logger.debug("Unable to authenticate user with Status code : " + response.getStatusLine().getStatusCode());
+								responseAuthenticationPojo.setStatusCode(response.getStatusLine().getStatusCode());
 							}
+						} else {
+							responseAuthenticationPojo.setMessage("Unable to authenticate user");
+							responseAuthenticationPojo.setStatusCode(500);
+							// this.logger.debug("Unable to authenticate user with Status code : " + 500);
 						}
-
-					else{
-							responseAuthenticationPojo.setStatusCode(200);
-							System.out.println("SERVER : user authenticate successfully with user name : " + userName);
-
-							try (FileWriter writer = new FileWriter(file);
-								 BufferedWriter bw = new BufferedWriter(writer)) {
-								bw.write("userId=" + userName);
-								bw.newLine();
-								bw.write("password=" + password);
-								bw.newLine();
-								// add more user IDs and passwords as required
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-
-							// this.logger.info("TrakmeServer authenticated successfully with user" + userName);
-							// System.out.println("Status Code : " + 200);
-						}
-					} else {
-						responseAuthenticationPojo.setMessage("Unable to authenticate user");
-						responseAuthenticationPojo.setStatusCode(500);
-						// this.logger.debug("Unable to authenticate user, response is null");
 					}
 
-			} catch (Exception e) {
-				System.out.println("INSIDE CATCH");
-				readCredentialsFromLocal(userName,password);
+					else {
+						responseAuthenticationPojo.setStatusCode(200);
+						System.out.println("SERVER : user authenticate successfully with user name : "+userName);
 
+						try (FileWriter writer = new FileWriter(file);
+							 BufferedWriter bw = new BufferedWriter(writer)) {
+							bw.write("userId="+userName);
+							bw.newLine();
+							bw.write("password="+password);
+							bw.newLine();
+							// add more user IDs and passwords as required
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						// this.logger.info("TrakmeServer authenticated successfully with user" + userName);
+						// System.out.println("Status Code : " + 200);
+					}
+				} else {
+					responseAuthenticationPojo.setMessage("Unable to authenticate user");
+					responseAuthenticationPojo.setStatusCode(500);
+					// this.logger.debug("Unable to authenticate user, response is null");
+				}
+			} catch (Exception e) {
+				readCredentialsFromLocal(userName,password);
+//				e.printStackTrace();
+//				responseAuthenticationPojo.setMessage("Unable to authenticate user");
+//				responseAuthenticationPojo.setStatusCode(500);
+				// this.logger.info("Unable to authentcate user");
 			}
 			return responseAuthenticationPojo;
 		}
@@ -187,7 +189,6 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 			System.out.println("PROPERTY FILE : user authenticate successfully with user name : "+userName);
 			return true;
 		}else {
-			responseAuthenticationPojo.setStatusCode(404);
 			responseAuthenticationPojo.setMessage("Invalid username or password");
 			return false;
 		}
@@ -199,7 +200,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 		try {
 
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/getftIccid?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/getftIccid?usrId="
 					+ userName;
 
 			// this.logger.debug("Calling  Server : " + completeUrl);
@@ -370,7 +371,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 		try {
 
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/client/wo/status?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/client/wo/status?usrId="
 					+ userName + "&woId=" + woID + "&iccid=" + iccid + "&status=" + status;
 
 			// this.logger.debug("Calling  Server : " + completeUrl);
@@ -398,7 +399,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 		try {
 
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/client/card/status?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/client/card/status?usrId="
 					+ userName + "&woId=" + woID + "&iccid=" + iccid + "&status=" + status + "&cardStageId="
 					+ cardStageId;
 
@@ -428,7 +429,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 		try {
 
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/client/card/counter?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/client/card/counter?usrId="
 					+ userName + "&woId=" + woID + "&iccid=" + iccid + "&counter=" + counter + "&cardStageId="
 					+ cardStageId;
 
@@ -457,7 +458,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 		ResponseProfileTestingConfig responseProfileTestingConfig = new ResponseProfileTestingConfig();
 		try {
 
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
 					+ userName + "&woId=" + woId;
 
 			// this.logger.debug("Calling  Server : " + completeUrl);
@@ -466,6 +467,9 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 
 			Gson gson = new Gson();
 			CloseableHttpResponse response = client.execute(get);
+
+			System.out.println("Status : "+response.getStatusLine());
+
 //			String responseString = "{\"fileSystemConfig\":[\"2F05,3F00,T,ALWAYS,CHV1,ADM,ADM,YES,NA,NA,8\",\"2FE2,3F00,T,ALWAYS,NEVER,ADM,ADM,NO,NA,NA,10\",\"2F00,3F00,LF,ALWAYS,ADM,ADM,ADM,YES,53,1,53\"],\"fileContentConfig\":[\"2F05,3F00,T,ALWAYS,1,1,FFFFFFFFFFFFFFFF\",\"2FE2,3F00,T,ALWAYS,1,1,ICCIDI\",\"2F00,3F00,LF,ALWAYS,1,1,41697274656C203447\"]}";
 			// this.System.out.println("Sever Response : " + responseString);
 			String responseString = EntityUtils.toString(response.getEntity());
@@ -476,6 +480,8 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 					.setFileContentConfig(responseFieldTestingProfileConfigPojo.getFileContentConfigs());
 			responseProfileTestingConfig
 					.setFileSystemConfig(responseFieldTestingProfileConfigPojo.getFileSystemConfigs());
+
+
 			return responseProfileTestingConfig;
 
 		} catch (Exception e) {
@@ -505,7 +511,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 	public int sendReportsToServer(String userName, List cardTestingPojos){
 		CloseableHttpClient client = HttpClients.createDefault();
 		try {
-//			String completeUrl = "http://localhost:8080/url?usrId="
+//			String completeUrl = "http://trakme.mannash.com/url?usrId="
 //					+ userName + "&woId=" + woID + "&iccid=" + iccid + "&counter=" + counter + "&cardStageId="
 //					+ cardStageId;
 
@@ -538,7 +544,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 		ResponseTestingConfig responseTestingConfig = new ResponseTestingConfig();
 		try {
 
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
 					+ userName + "&woId=" + woId;
 
 			// this.logger.debug("Calling  Server : " + completeUrl);
@@ -551,20 +557,11 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 			// this.System.out.println("Sever Response : " + responseString);
 			String responseString = EntityUtils.toString(response.getEntity());
 
+//			System.out.println(responseString.toString());
+
 			ResponseTestingConfig responseFieldTestingConfigPojo = (ResponseTestingConfig) gson
 					.fromJson(responseString, ResponseTestingConfig.class);
-			responseTestingConfig
-					.setFileContentConfig(responseFieldTestingConfigPojo.getFileContentConfig());
-			responseTestingConfig
-					.setFileSystemConfig(responseFieldTestingConfigPojo.getFileSystemConfig());
-//			responseTestingConfig
-//					.setFileVerificationSystemConfig(responseFieldTestingConfigPojo.getFileVerificationSystemConfig());
-//			responseTestingConfig
-//					.setFileVerificationContentConfig(responseFieldTestingConfigPojo.getFileVerificationContentConfig());
-			responseTestingConfig
-					.setApduList(responseFieldTestingConfigPojo.getApduList());
-			responseTestingConfig
-					.setLoopCount(responseFieldTestingConfigPojo.getLoopCount());
+
 
 			return responseTestingConfig;
 
@@ -598,7 +595,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 //		CloseableHttpClient client = HttpClients.createDefault();
 //		try {
 //
-//			String logPushUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/logs/post";
+//			String logPushUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/logs/post";
 //			HttpPost post = new HttpPost(logPushUrl);
 //			RequestClientLogsPojo pushRequest = new RequestClientLogsPojo();
 //			pushRequest.setRequestClientLogPojos(requestLogPojos);
@@ -640,7 +637,7 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 		ResponseStressTestingConfig responseStressTestingConfig = new ResponseStressTestingConfig();
 
 		try {
-			String completeUrl = "http://localhost:8080/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
+			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
 					+ userName + "&woId=" + woId;
 
 			// this.logger.debug("Calling  Server : " + completeUrl);
@@ -684,5 +681,71 @@ public class TrakmeServerCommunicationServiceImpl implements TrakmeServerCommuni
 		}
 
 	}
+
+
+
+
+	// Common config
+//
+//	public ResponseFieldTestingProfileConfigPojo getSimVerifyTestingConfig(String iccid, String woId, String userName) {
+//		CloseableHttpClient client = HttpClients.createDefault();
+//		ResponseFieldTestingProfileConfigPojo responseFieldTestingProfileConfigPojo = new ResponseFieldTestingProfileConfigPojo();
+//		try {
+//
+//			String completeUrl = "http://trakme.mannash.com/trakmeserver/api/external/fieldtest/profileconfig/get?usrId="
+//					+ userName + "&woId=" + woId;
+//
+//			// this.logger.debug("Calling  Server : " + completeUrl);
+//
+//			HttpGet get = new HttpGet(completeUrl);
+//
+//			Gson gson = new Gson();
+//			CloseableHttpResponse response = client.execute(get);
+////			String responseString = "{\"fileSystemConfig\":[\"2F05,3F00,T,ALWAYS,CHV1,ADM,ADM,YES,NA,NA,8\",\"2FE2,3F00,T,ALWAYS,NEVER,ADM,ADM,NO,NA,NA,10\",\"2F00,3F00,LF,ALWAYS,ADM,ADM,ADM,YES,53,1,53\"],\"fileContentConfig\":[\"2F05,3F00,T,ALWAYS,1,1,FFFFFFFFFFFFFFFF\",\"2FE2,3F00,T,ALWAYS,1,1,ICCIDI\",\"2F00,3F00,LF,ALWAYS,1,1,41697274656C203447\"]}";
+//			// this.System.out.println("Sever Response : " + responseString);
+//			String responseString = EntityUtils.toString(response.getEntity());
+//
+//			System.out.println(responseString.toString());
+//
+//			ResponseFieldTestingProfileConfigPojo responseFieldTestingConfigPojo = (ResponseFieldTestingProfileConfigPojo) gson
+//					.fromJson(responseString, ResponseFieldTestingProfileConfigPojo.class);
+//
+//			responseFieldTestingProfileConfigPojo
+//					.setFileVerificationSystemConfigs(responseFieldTestingConfigPojo.getFileVerificationSystemConfigs());
+//			responseFieldTestingProfileConfigPojo
+//					.setFileVerificationContentConfigs(responseFieldTestingConfigPojo.getFileVerificationContentConfigs());
+//
+//			responseFieldTestingProfileConfigPojo.setFileSystemConfigs(responseFieldTestingConfigPojo.getFileSystemConfigs());
+//			responseFieldTestingProfileConfigPojo.setFileContentConfigs(responseFieldTestingConfigPojo.getFileContentConfigs());
+//
+//			responseFieldTestingProfileConfigPojo.setStressTestingApdus(responseFieldTestingConfigPojo.getStressTestingApdus());
+//			responseFieldTestingProfileConfigPojo.setStressTestingLoopCount(responseFieldTestingConfigPojo.getStressTestingLoopCount());
+//
+//			return responseFieldTestingProfileConfigPojo;
+//
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//
+//			return null;
+//
+//		}
+//
+//		finally {
+//
+//			try {
+//
+//				client.close();
+//
+//			} catch (IOException e) {
+//
+//				e.printStackTrace();
+//
+//			}
+//
+//		}
+//
+//	}
+
 
 }

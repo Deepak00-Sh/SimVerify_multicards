@@ -4,7 +4,6 @@ import com.mannash.simcardvalidation.card.FileSystemVerification;
 import com.mannash.simcardvalidation.card.ProfileTest3G;
 import com.mannash.simcardvalidation.card.StressTest;
 import com.mannash.simcardvalidation.pojo.ExportTestingResultPojo;
-import com.mannash.simcardvalidation.pojo.SimVerifyPopUpWindowDataPojo;
 import com.mannash.simcardvalidation.pojo.TerminalInfo;
 import com.mannash.simcardvalidation.service.LoggerService;
 import javafx.application.Platform;
@@ -43,14 +42,16 @@ public class TestingController4 implements Initializable, Runnable {
 
     SimVerifyLoggerThread loggerThread;
     private volatile boolean stopRequested = true;
+    String username ;
 
 
-    public TestingController4(String threadName, TerminalInfo terminal1, SimVerifyMasterThread2 thread, int index, SimVerifyLoggerThread loggerThread) {
+    public TestingController4(String threadName, TerminalInfo terminal1, SimVerifyMasterThread2 thread, int index, SimVerifyLoggerThread loggerThread, String userId) {
         simVerifyMasterThread2 = thread;
         this.threadName = threadName;
         this.terminal = terminal1;
         this.widgetId = index;
         this.loggerThread = loggerThread;
+        this.username = userId;
 
     }
 
@@ -335,7 +336,7 @@ public class TestingController4 implements Initializable, Runnable {
             this.thread1 = new Thread(task1);
             this.threadMap.put("t1", this.thread1);
             this.thread1.setName(widgetId + "_task1Thread");
-            ThreadController.addThread(thread1);
+
             thread1.start();
 
 
@@ -403,7 +404,7 @@ public class TestingController4 implements Initializable, Runnable {
                     System.out.println("result of task 1 : " + result);
                     Platform.runLater(() -> {
                         if (result) {
-
+                            loggerThread.displayLogs(_terminal, _card, "SIM Heartbeat done", widgetId);
                         } else {
 
                             simVerifyMasterThread2.updateWidgetStatusImage(false, widgetId);
@@ -424,18 +425,30 @@ public class TestingController4 implements Initializable, Runnable {
                         this.testingResultPojo.setTerminalNumber(terminalNumber);
                         this.testingResultPojo.setTerminalICCID(terminalICCID);
                         this.testingResultPojo.setTerminalIMSI(terminalIMSI);
-                        this.testingResultPojo.setSIMHeartbeat("OK");
+                        this.testingResultPojo.setSimHeartbeat("OK");
                         this.thread2 = new Thread(task2);
                         this.threadMap.put("t2", this.thread2);
-                        ThreadController.addThread(this.thread2);
+
                         this.thread2.setName(widgetId + "_task2Thread");
                         this.thread2.start();
                         this.thread1.stop();
                     } else {
+
+                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss a");
+                        this.testingResultPojo.setDateOfTesting(LocalDate.now().format(dateFormatter));
+                        this.testingResultPojo.setTimeOfTesting(LocalTime.now().format(timeFormatter));
+                        this.testingResultPojo.setTerminalNumber(terminalNumber);
+                        this.testingResultPojo.setTerminalICCID(terminalICCID);
+                        this.testingResultPojo.setTerminalIMSI(terminalIMSI);
+
+
+                        this.testingResultPojo.setSimHeartbeat("NOT OK");
                         this.testingResultPojo.setFileSystemVerification("NOT OK");
                         this.testingResultPojo.setProfileTesting("NOT OK");
                         this.testingResultPojo.setReadWrite("NOT OK");
                         this.testingResultPojo.setCardStatus("FAULTY");
+
                         task2.cancel();
                         task3.cancel();
                         task4.cancel();
@@ -468,7 +481,7 @@ public class TestingController4 implements Initializable, Runnable {
                         this.thread3.setName(widgetId + "_task3Thread");
                         this.threadMap.put("t3", this.thread3);
                         this.thread3.start();
-                        ThreadController.addThread(this.thread3);
+
                         this.thread2.stop();
                     } else {
                         this.testingResultPojo.setFileSystemVerification("NOT OK");
@@ -507,7 +520,7 @@ public class TestingController4 implements Initializable, Runnable {
                         this.thread4.setName(widgetId + "_task4Thread");
                         this.thread4.start();
 
-                        ThreadController.addThread(this.thread4);
+
                         this.thread3.stop();
                     } else {
                         this.testingResultPojo.setProfileTesting("NOT OK");
@@ -542,7 +555,7 @@ public class TestingController4 implements Initializable, Runnable {
                         this.thread5.setName(widgetId + "_task5Thread");
                         this.thread5.start();
 
-                        ThreadController.addThread(this.thread5);
+
                         this.thread4.stop();
                     } else {
                         this.testingResultPojo.setReadWrite("NOT OK");
